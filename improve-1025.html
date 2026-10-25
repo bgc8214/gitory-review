@@ -23,7 +23,7 @@
 </nav>
 
 <header class="hero">
-  <p class="eyebrow">GITORY · 점수 올리기 보완 계획 · 2026-10-25 · 마감까지 17일</p>
+  <p class="eyebrow">GITORY · 점수 올리기 보완 계획 · 2026-10-26 · 코드 마감 11/6 · 제출 11/11</p>
   <h1>어디를 보완하면 점수가 오르나</h1>
   <p class="kicker">근거 3종 결합: ① 10/25 운영 서비스 전 기능 실측 ② develop 코드 전수 대조 ③ 전 팀 비교 조사. 모든 액션에 파일 경로·노력·기대 효과를 달았습니다.</p>
   <div class="note"><p>🧭 <b>어려우면 쉽게 읽는 판 먼저</b> — 팀별 한 줄 설명·우리 위치·할 일 5개를 일상어로 정리했습니다.</p></div>
@@ -45,10 +45,10 @@
   깎인 두 곳이 전부 <b>문서(①⑩)</b>라는 게 핵심입니다 — 코드가 아니라 "보여주기"가 병목. 그리고 상위권 팀들과의 실질 격차는 <b>③ 진짜 에이전트 루프</b> 하나입니다.<br>
   <span class="kicker">전략: (A) 반나절 문서 작업으로 ①⑩ 회수 → (B) 1~2일 검증-반려 루프로 ③ 확보 → (C) 남는 시간 전부 발표·영상(현장 40%)에.</span></p></div>
 
-  <h3>오늘 새로 확인된 좋은 소식 3개 (이미 갖고 있는 것)</h3>
+  <h3>이미 갖고 있는 것 — 확인된 현황</h3>
   <div class="tblw"><table>
-    <tr><td>⚠️ <b>E2E — 범위를 구분해야</b></td><td><b>교차검증 정정.</b> <code>frontend/e2e-real</code>(5개)은 이름과 달리 <b>계약 fixture 가 /api 를 가로채</b> 실제 Spring 호출이 아님. 진짜 스택 E2E 는 <code>e2e/</code>(DB·AI·BE·web 기동, 단 GitHub·LLM 은 가짜, 카드 AI 초안 꺼짐)이고 <b>필수 체크·배포 게이트가 아님</b>. ⑧은 여전히 강하나 <b>"외부 연동까지 CI 검증"이라고 말하면 안 됨</b></td></tr>
-    <tr><td>⚠️ <b>UsageEvent — 절반만 사실</b></td><td><b>교차검증으로 정정.</b> 백엔드 허용 목록은 25종이지만(<code>UsageEventNames.java:11</code>), <b>프론트가 실제로 보내는 건 그보다 적습니다</b> — <code>match_opened</code>·<code>cover_letter_*</code> 4종은 <code>track.ts</code> 의 EventName 에도 없고 호출부도 없음. <b>"집계만 남음"은 틀렸고, 매칭·자소서 퍼널은 전송부터 붙여야 합니다.</b> 앞단(repo_selected~card_confirmed)은 쌓일 가능성이 높지만 <b>DB 실적재는 서버에서 확인 필요</b></td></tr>
+    <tr><td>⚠️ <b>E2E — 범위를 구분해야</b></td><td><code>frontend/e2e-real</code>(5개)은 이름과 달리 <b>계약 fixture 가 /api 를 가로채</b> 실제 Spring 호출이 아님. 진짜 스택 E2E 는 <code>e2e/</code>(DB·AI·BE·web 기동, 단 GitHub·LLM 은 가짜, 카드 AI 초안 꺼짐)이고 <b>필수 체크·배포 게이트가 아님</b>. ⑧은 여전히 강하나 <b>"외부 연동까지 CI 검증"이라고 말하면 안 됨</b></td></tr>
+    <tr><td>⚠️ <b>UsageEvent — 절반만 사실</b></td><td>백엔드 허용 목록은 25종이지만(<code>UsageEventNames.java:11</code>), <b>프론트가 실제로 보내는 건 그보다 적습니다</b> — <code>match_opened</code>·<code>cover_letter_*</code> 4종은 <code>track.ts</code> 의 EventName 에도 없고 호출부도 없음. <b>"집계만 남음"은 틀렸고, 매칭·자소서 퍼널은 전송부터 붙여야 합니다.</b> 앞단(repo_selected~card_confirmed)은 쌓일 가능성이 높지만 <b>DB 실적재는 서버에서 확인 필요</b></td></tr>
     <tr><td class="ok">✅ <b>매칭 evals 이미 존재</b></td><td><code>ai/evals/JOB_MATCHING_EVALUATION.md</code> + cases.json 2종 + evaluate 스크립트 — ⑥이 매칭까지 커버</td></tr>
   </table></div>
 </section>
@@ -59,14 +59,14 @@
   <h3>🔴 1순위 — ① 명확성 + ⑩ 문서·협업 (둘 다 1→2, 반나절×2)</h3>
   <div class="tblw"><table>
     <tr><th>액션</th><th>구체적으로</th><th>근거</th></tr>
-    <tr><td><b>A1. 루트 README 허브화 (+backend README 신설)</b></td><td><b>정정</b>: 파트별 README 는 이미 충실합니다(frontend 23KB·ai 14KB·contracts 6.5KB·e2e 3.8KB). <b>빠진 건 셋</b> — ⓐ 루트가 허브 역할을 못 함(제목 <code># ktc4-team-05</code>, 작업기록 나열) ⓑ <code>backend/README.md</code> <b>없음</b>(세 파트 중 백엔드만) ⓒ frontend README 의 날짜별 일지 15개가 유용한 내용을 묻음 → <code>frontend/docs/CHANGELOG.md</code> 로 분리</td><td>제출물 4 "README(실행·배포 방법 포함)" · 기준 ⑩의 <b>"고루"</b></td></tr>
+    <tr><td><b>A1. 루트 README 허브화 (+backend README 신설)</b></td><td>파트별 README 는 이미 충실합니다(frontend 23KB·ai 14KB·contracts 6.5KB·e2e 3.8KB). <b>빠진 건 셋</b> — ⓐ 루트가 허브 역할을 못 함(제목 <code># ktc4-team-05</code>, 작업기록 나열) ⓑ <code>backend/README.md</code> <b>없음</b>(세 파트 중 백엔드만) ⓒ frontend README 의 날짜별 일지 15개가 유용한 내용을 묻음 → <code>frontend/docs/CHANGELOG.md</code> 로 분리</td><td>제출물 4 "README(실행·배포 방법 포함)" · 기준 ⑩의 <b>"고루"</b></td></tr>
     <tr><td><b>A2. PRODUCT.md 신설</b></td><td>A팀 <code>PRODUCT.md</code>·B팀 <code>CONTEXT.md</code> 벤치마크: 페르소나(취준 N년차, 레포는 있는데 자소서가 빈), 문제 한 문장, 핵심 시나리오, 성공 지표 3개, <b>버린 대안과 이유</b>(매칭을 미뤘다가 직무조건 기준으로 넣은 결정 등 — 우리 PR 토론에 다 있음)</td><td>①의 "일관되게 연결되어 설득력" — 현장심사 ①(20점)의 대본이기도 함</td></tr>
     <tr><td><b>A3. 그라운드룰/협업 문서</b></td><td><code>docs/COLLABORATION.md</code> 한 장: 브랜치 전략(feature→develop→main), 리뷰 규칙(이미 지키는 것 명문화), 컨벤션(이미 <code>convention-check.yml</code> 이 강제 중 — 그 철학 주석을 문서로 승격), 마이그레이션 번호 규칙(#123)</td><td>제출물 6 요구사항 그대로. <b>새로 정하는 게 아니라 이미 하는 걸 적는 일</b></td></tr>
     <tr><td><b>A4. MEASUREMENTS.md</b></td><td>D팀 벤치마크: <code>ai/evals/MEASUREMENTS.md</code> — 모델명 필수, 0건도 분모 명시(0/N), 데이터셋 출처, 날짜. 기존 MODEL_SELECTION·JOB_MATCHING 평가 결과를 이 규율로 한 장에 집계</td><td>⑥을 "있다"에서 "돋보인다"로. D팀가 이걸로 19점</td></tr>
   </table></div>
 
-  <h3>🔴 2순위 — ③ Agentic 경험 (교차검증 판정: <b>현재 1점</b> → 2, 3~4일) — 상위권과의 유일한 코드 격차</h3>
-  <div class="note b"><p><b>이 항목은 전용 설계 문서가 따로 있습니다 → <a href="agentic-1025.html">Agentic 보완 설계 (45점을 지키는 법)</a></b> — 도구 설계, 루프, 상위팀 매트릭스, <b>초기 분석에서 정정된 전제 5개</b>까지. 아래 B1~B3 은 그 요약입니다.</p></div>
+  <h3>🔴 2순위 — ③ Agentic 경험 (현재 1점 → 2, 3~4일) — 상위권과의 유일한 코드 격차</h3>
+  <div class="note b"><p><b>이 항목은 전용 설계 문서가 따로 있습니다 → <a href="agentic-1025.html">Agentic 상세 설계</a></b> — 도구 설계, 루프, 구현 PR 분할까지. 아래 B1~B3 은 그 요약입니다.</p></div>
   <p>오늘 실측 기준 우리 ③의 실체: 되묻기 LLM이 다음 칸·질문을 고름(<code>interview_llm</code>) — 좋지만 <b>도구 호출 루프는 없고</b>, <code>tool_calls_made</code> 는 API마다 뜻이 달라 통일된 계측이 없음(STAR·groups 는 0 고정). 상위팀(A팀·4, F팀·3)은 전부 진짜 루프 보유.</p>
   <div class="tblw"><table>
     <tr><th>액션</th><th>구체적으로</th><th>왜 이 방식</th></tr>
@@ -82,7 +82,7 @@
 
   <h3>🟢 지키기만 하면 되는 항목 (액션 최소)</h3>
   <div class="tblw"><table>
-    <tr><td>② 완성도</td><td>오늘 전 구간 무결점. <b>발표회 전 주에 기능 동결</b> + J팀 벤치마크로 deploy.yml 에 헬스체크 실패 시 롤백 1단계(보험)</td></tr>
+    <tr><td>② 완성도</td><td>오늘 전 구간 무결점. <b>11/6 코드 마감 준수</b> + J팀 벤치마크로 deploy.yml 에 헬스체크 실패 시 롤백 1단계(보험)</td></tr>
     <tr><td>④ 충실성</td><td>PR 221·매칭까지 — 충분. 새 기능 금지, 다듬기만</td></tr>
     <tr><td>⑤ 설계</td><td>스위치·상태머신·폴백 완비. B3 계측만 더하면 끝</td></tr>
     <tr><td>⑦ 가드레일</td><td>GUARDRAILS.md 보유 + #154 해결. <b>이슈 #154 닫기</b>(코드는 반영됐는데 OPEN — 심사자가 열면 미해결로 오해)</td></tr>
@@ -178,12 +178,13 @@
 
 <section id="s5">
   <h2>4. 2주 일정 제안</h2>
-  <pre>10/26(일)~10/29(수)   A1 README(+backend README) · A2 PRODUCT · A3 협업문서 · A4 MEASUREMENTS · #154 닫기
-10/28(화)~10/31(금)   B1 검증-반려 루프 + 과정 표시 + B3 계측   ← <b>영상 촬영의 선행 조건</b>
-11/1(토)~11/4(화)     C1 지표 집계 · 체험 돌리기 · 테스트 계정 준비 · <b>기능 동결</b>
-11/5(수)~11/8(토)     테크스펙 조립(6섹션 중 4개는 링크·요약) · 발표 자료 · <b>영상 촬영</b>
-11/9(일)~11/10(월)    리허설 2회 (Q&A 3종 포함) · 제출물 링크 최종 점검
-11/11(화) 17:00       제출  →  11/12(수) 18:00 경북대 발표</pre>
+  <pre>10/27(월)~10/30(목)   A1 README(+backend README) · A2 PRODUCT · A3 협업문서 · A4 MEASUREMENTS · #154 닫기
+10/27(월)~11/5(수)    B1 검증-반려 루프 + 과정 표시 + B3 계측 · ① 매칭 개편 · ⑥ 에러 점검
+11/4(화)~11/5(수)     C1 지표 집계 · 체험 돌리기 · 테스트 계정 준비 · <b>영상 촬영 시작</b>
+<span class="bad">11/6(금) ──── 코드 마감 ────</span>   이후 버그 수정만
+11/7(토)~11/9(월)     테크스펙 조립(6섹션 중 4개는 링크·요약) · 발표 자료 · 영상 편집
+11/10(화)             리허설 2회 (Q&amp;A 3종 포함) · 제출물 링크 최종 점검
+11/11(수) 17:00       제출  →  11/12(목) 18:00 경북대 발표</pre>
   <div class="note ok"><p><b>요약 — 코드는 B1 하나, 나머지는 전부 보여주기.</b> 지금 서비스는 상위권 팀들과 견줘 꿀리지 않는데 레포 첫인상(README)과 "스스로 고치는 장면" 둘이 없어서 18입니다. 그 둘을 넣으면 레포 기준 20이고, 남는 열흘을 현장 40%에 쏟는 팀이 됩니다.</p></div>
 </section>
 

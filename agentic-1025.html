@@ -49,7 +49,6 @@
 
 <nav class="toc">
   <b>목차</b>
-  <a href="#s0">0. 정정 — 전제 2개가 틀렸습니다</a>
   <a href="#s1">1. 지금 AI가 하는 일 전부</a>
   <a href="#s2">2. 진짜 빈 칸은 어디인가</a>
   <a href="#s3">3. 설계 — 초안 에이전트</a>
@@ -63,25 +62,6 @@
   <a href="#s7">7. 측정·발표</a>
   <a href="#s8">8. 리스크</a>
 </nav>
-
-<section id="s0">
-  <h2>0. 먼저 — 초기 분석의 정정 사항</h2>
-  <div class="note r"><p><b>코드를 더 깊이 읽고 전제 2개를 정정합니다.</b> 초기 분석의 "지어낸 숫자가 그대로 통과한다"는 <b>사실이 아니었습니다.</b> 출력 검증은 이미 동작하고 있습니다.</p></div>
-
-  <div class="tblw"><table>
-    <tr><th>이전 주장</th><th>실제 (코드 확인)</th></tr>
-    <tr class="bad"><td>"지어낸 숫자가 그대로 통과한다"</td><td><b>틀림.</b> <code>star_generator.py:314</code> 가 <code>unsupported_metrics()</code> 를 호출해 출처 없는 수치를 잡고 <b>NEEDS_REVIEW 로 강등</b>. <code>interview_llm.py:206</code> 에서도 씀 — 잠자는 부품이 아니라 <b>현역</b></td></tr>
-    <tr class="bad"><td>"read_context 로 PR·이슈를 읽는다"</td><td><b>틀림.</b> <code>StarAnalysisRequest</code> 에는 PR/이슈 전체 컨텍스트가 없음. <code>evidence</code>(diff 요약) · <code>pull_request_body</code>(대표 PR 본문 1개) · <code>confirmed_answers</code> · <code>dependency_files</code> 뿐</td></tr>
-    <tr class="warn"><td>"45초 예산으로"</td><td><b>부정확.</b> 이미 <code>deadline_seconds=150</code>(Spring 대기 180초, <code>application.yml:119</code>) · <code>max_attempts=2</code> · <code>min_call_seconds=10</code>. <b>예산은 이미 넉넉함</b> — 새로 정할 게 아니라 쓰면 됨. 단 <b>한 요청에 카드 8장까지</b>(<code>CardCreationController:35</code>) 가능하므로 Job 전체 대기·워커 점유를 같이 재야 함</td></tr>
-    <tr class="bad"><td>"<code>tool_calls_made</code> 는 전부 0 고정"</td><td><b>틀림.</b> <code>/diff-evidence</code> 는 GitHub API 호출 수를, <code>/interview-turns</code> 는 LLM 사용 여부를 0/1로 반환(<code>interviews.py:69</code>). <b>진짜 문제는 API마다 뜻이 다르고 STAR만 0</b>이라는 것 — 넣기 전에 <b>필드 의미부터 합의</b>해야 함</td></tr>
-    <tr class="bad"><td>"문장이 diff에 근거하는지 검증하는 완성품"</td><td><b>과한 표현.</b> <code>match_commit_sha</code> 는 <b>SHA 대조</b>, <code>unsupported_metrics</code> 는 <b>숫자 표현의 출처 대조</b>뿐. <b>문장의 의미가 diff에 근거하는지는 아무도 검증하지 않습니다</b> — 그건 Critic LLM(H팀 방식)이 필요한 별개 과제</td></tr>
-  </table></div>
-  <p class="kicker">정정 출처: 다른 에이전트의 교차검증(2026-10-25) + 제 재확인. 이렇게 틀린 걸 남겨두는 이유는 <b>이 문서로 의사결정을 하실 것이기 때문</b>입니다.</p>
-
-  <p>그래서 진단이 더 정확해지고, 좋은 쪽으로 바뀝니다:</p>
-  <div class="say">검증기는 <b>이미 전국 최상위</b>입니다. 문제는 검증 결과가 <b>모델에게 돌아가지 않는다</b>는 것 — 틀리면 지우거나 딱지를 붙일 뿐, <b>다시 쓰게 하지 않습니다.</b></div>
-  <p class="kicker">한 바퀴만 연결하면 됩니다. 그게 "에이전트"와 "파이프라인"의 차이입니다.</p>
-</section>
 
 <section id="s1">
   <h2>1. 지금 우리 AI가 하는 일 — 전부</h2>
@@ -139,7 +119,7 @@
   <p class="kicker">카드 초안(DRAFT Job)의 <code>StarGenerator.generate()</code> 안쪽만 바꿉니다. Spring·FE·DB 계약 변경 0.</p>
 
   <h3 id="s3a">3-1. 도구 3개 (+1개 보류) — 모델이 쓸 수 있는 행동</h3>
-  <p>※ 정정 반영: PR/이슈 전체 컨텍스트는 요청에 없으므로 <b>읽기 도구는 요청 안의 재료만 다룹니다.</b></p>
+  <p>※ STAR 요청에는 PR/이슈 전체 컨텍스트가 없으므로 <b>읽기 도구는 요청 안의 재료만 다룹니다.</b></p>
 
   <div class="step">
     <h4><code>read_evidence(sha)</code> <span class="badge b-have">부품 있음</span></h4>
@@ -163,7 +143,7 @@
     <h4><code>ask_user(slot, question)</code> <span class="badge b-fix">Spring 변경 필요 — 후순위</span></h4>
     <p class="meta">재료: 되묻기 인프라 — 단 <b>소유자가 Spring</b></p>
     <p>두 번 고쳐도 근거가 없으면 지어내지 말고 <b>빈 칸으로 두되 질문을 남긴다</b>는 아이디어입니다.</p>
-    <div class="note r"><p><b>교차검증에서 걸러진 제 착각</b> — "20줄이면 재사용"이라고 썼는데 <b>틀렸습니다.</b> 질문의 순번·횟수 제한·영속 저장은 전부 <b>Spring <code>InterviewAskService</code> 가 소유</b>하고(<code>interviews.py:45</code> 에 명시), AI 서비스는 질문을 <b>생성해 반환만</b> 합니다. 카드 초안 경로(<code>CardDraftRunner</code>)는 되묻기 저장 경로와 아예 다릅니다. 루프 안에서 질문을 만들어 저장·중단·재개하려면 <b>Spring Job/질문 생명주기를 바꿔야 합니다.</b></p></div>
+    <div class="note r"><p><b>이 도구는 간단하지 않습니다</b> — 질문의 순번·횟수 제한·영속 저장은 전부 <b>Spring <code>InterviewAskService</code> 가 소유</b>하고(<code>interviews.py:45</code> 에 명시), AI 서비스는 질문을 <b>생성해 반환만</b> 합니다. 카드 초안 경로(<code>CardDraftRunner</code>)는 되묻기 저장 경로와 아예 다릅니다. 루프 안에서 질문을 만들어 저장·중단·재개하려면 <b>Spring Job/질문 생명주기를 바꿔야 합니다.</b></p></div>
     <p><b>그래서 이번 범위에서 뺍니다.</b> 대신 같은 효과를 싸게 내는 대안 — 에이전트가 "이 칸은 근거가 없어 못 씁니다"를 <b>응답 필드로 올리고</b>(<code>insufficient_reason</code> 은 이미 있음), 화면이 그 칸에 기존 "답변하기" 버튼을 노출. <b>계약 변경 없이</b> "모르면 묻는다"가 사용자에게 같은 모습으로 보입니다.</p>
   </div>
 
@@ -275,11 +255,11 @@
   <h2>8. 리스크와 반론</h2>
   <div class="tblw"><table>
     <tr><th>우려</th><th>답</th></tr>
-    <tr><td>"마감 17일 전에 AI 핵심을 건드린다?"</td><td>단계 1·2는 <b>동작 변화 0</b>. 3은 스위치로 감싸고 폴백이 현행 코드. 최악의 경우에도 <b>오늘의 서비스</b></td></tr>
+    <tr><td>"코드 마감 11일 전에 AI 핵심을 건드린다?"</td><td>단계 1·2는 <b>동작 변화 0</b>. 3은 스위치로 감싸고 폴백이 현행 코드. 최악의 경우에도 <b>오늘의 서비스</b></td></tr>
     <tr><td>"비용·시간이 늘어난다"</td><td>늘어나는 건 <b>검증에 실패했을 때뿐</b>이고, 그때 늘어나는 게 가치입니다. 예산(150초·10초 하한)은 이미 코드에 있음. 제안 5(라우팅)가 반대쪽에서 호출을 줄임</td></tr>
     <tr><td>"LangChain 같은 걸 써야 하지 않나"</td><td>아니요. B팀(상위권)가 <b>프레임워크 없이</b> 도구 루프를 짜서 증명했습니다. 도구 3개짜리 루프는 직접 짜는 게 더 작고, <b>"직접 이해하고 만들었다"가 발표·면접에서 더 셉니다</b></td></tr>
     <tr><td>"되묻기 자율성만으로 ③ 안 되나"</td><td>상위권 팀들 중 4팀이 도구 루프를 가졌습니다. "모델이 질문을 고른다"는 <b>설명</b>이고 trace는 <b>증거</b>입니다 — 심사는 증거를 봅니다</td></tr>
-    <tr><td>"BE 수정이 필요하면?"</td><td>교차검증에서 <code>ask_user</code> 가 <b>Spring 생명주기 변경이 필요하다</b>고 확인돼 <b>범위에서 뺐습니다.</b> 남은 제안은 전부 <b>AI 서비스 안에서 끝나고</b> 응답 계약도 그대로입니다(trace 필드만 추가)</td></tr>
+    <tr><td>"BE 수정이 필요하면?"</td><td><code>ask_user</code> 는 <b>Spring 생명주기 변경이 필요해 범위에서 뺐습니다.</b> 남은 제안은 전부 <b>AI 서비스 안에서 끝나고</b> 응답 계약도 그대로입니다(trace 필드만 추가)</td></tr>
   </table></div>
 </section>
 

@@ -1,4 +1,8 @@
 /* 문서 간 내비게이션 — 2026-10-25 */
+/* docnav 가 1행을 차지하므로 toc 시작 행을 한 칸 뒤로 민다 (style.css 의 grid-row:2 오버라이드) */
+.wrap > .toc{grid-row:3/span 60}
+@media(max-width:820px){ .wrap > .toc{grid-row:auto} }
+
 .docnav{grid-column:1/-1;display:flex;align-items:center;gap:6px;flex-wrap:wrap;
   margin:0 0 20px;padding:9px 0 11px;border-bottom:1px solid var(--color-rule);font-size:13px}
 .docnav .home{font:700 12.5px var(--font-body);color:var(--color-ink);text-decoration:none;
