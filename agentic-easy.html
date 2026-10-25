@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agentic 쉽게 — 왜 점수가 낮고 뭘 하면 되나</title>
+<link rel="stylesheet" href="claude/tokens.css">
+<link rel="stylesheet" href="claude/style.css">
+<link rel="stylesheet" href="nav.css">
+<style>
+body{font-size:16.5px}
+section p,section li{font-size:16.5px;line-height:1.85}
+.q{font:700 19px/1.5 var(--font-display);margin:26px 0 10px;color:var(--color-ink)}
+.ex{border:1px solid var(--color-rule);border-radius:var(--radius-md);padding:16px 20px;margin:14px 0;background:var(--color-surface);max-width:78ch}
+.ex b.t{display:block;font-size:12px;letter-spacing:.04em;color:var(--color-muted);margin-bottom:8px}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0;max-width:80ch}
+.cmp>div{border:1px solid var(--color-rule);border-radius:var(--radius-md);padding:15px 18px}
+.cmp .a{border-left:5px solid var(--color-amber);background:oklch(97% 0.015 86)}
+.cmp .b{border-left:5px solid var(--color-green);background:oklch(97% 0.015 142)}
+.cmp h4{margin:0 0 9px;font-size:14px;border:0;padding:0}
+.cmp p{font-size:14.5px;margin:7px 0}
+@media(max-width:760px){.cmp{grid-template-columns:1fr}}
+.todo{border:1px solid var(--color-rule);border-left:6px solid var(--color-ink);border-radius:var(--radius-md);padding:18px 22px;margin:18px 0;max-width:80ch}
+.todo .n{display:inline-block;background:var(--color-ink);color:var(--color-paper);border-radius:50%;width:26px;height:26px;text-align:center;line-height:26px;font-size:13px;font-weight:700;margin-right:9px}
+.todo h3{display:inline;border:0;padding:0;font-size:17px}
+.todo .meta{font:600 11.5px var(--font-code);color:var(--color-muted);margin:10px 0 0}
+.who{display:inline-block;font:700 11px var(--font-body);background:var(--color-code);color:var(--color-muted);padding:2px 9px;border-radius:999px;margin-left:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="docnav">
+  <a class="home" href="index.html">⌂ 전체</a>
+  <span class="sep"></span>
+  <a class="d" href="roadmap-1026.html"><span class="k">★</span>회의 반영</a>
+  <a class="d" href="rubric-1025.html"><span class="k">01</span>심사 100점</a>
+  <a class="d" href="improve-1025.html"><span class="k">02</span>보완 계획</a>
+  <a class="d on" href="agentic-easy.html"><span class="k">03</span>Agentic 쉽게</a>
+  <a class="d" href="agentic-1025.html"><span class="k">04</span>Agentic 설계</a>
+  <a class="d" href="industry-1025.html"><span class="k">05</span>업계 사례</a>
+  <a class="d" href="readme-1025.html"><span class="k">06</span>README</a>
+</nav>
+
+<header class="hero">
+  <h1>Agentic 쉽게 — 왜 점수가 낮고, 뭘 하면 되나</h1>
+  <p class="context">심사 ③ Agentic 경험 <b>4/10</b> · 멘토 10점 + 현장 20점 = <b>30점</b>이 이 항목에 걸려 있음</p>
+  <p>전문 용어 없이, 우리 서비스 예시로만 설명합니다. 기술 설계는 <a href="agentic-1025.html">상세 설계 문서</a>에 있습니다.</p>
+  <p class="owner">🧭 전체 요약은 쉽게 읽는 판 · 항목별 채점은 <a href="rubric-1025.html">100점 문서</a></p>
+</header>
+
+<nav class="toc">
+  <b>목차</b>
+  <a href="#s1">1. "에이전트"가 뭔가</a>
+  <a href="#s2">2. 지금 우리는 어떤가</a>
+  <a href="#s3">3. 왜 점수가 깎이나</a>
+  <a href="#s4">4. 뭘 하면 되나 — 3단계</a>
+  <a href="#s5">5. 자주 나올 질문</a>
+</nav>
+
+<section id="s1">
+  <h2>1. 심사에서 말하는 "에이전트"가 뭔가</h2>
+
+  <p class="q">한 줄로: 시키는 일만 하는 게 아니라, <b>스스로 확인하고 고치는</b> 프로그램.</p>
+
+  <p>식당으로 비유하면 이렇습니다.</p>
+
+  <div class="cmp">
+    <div class="a"><h4>🥘 지금 우리 (= 자판기)</h4>
+      <p>주문을 받으면 <b>한 번에 재료를 다 꺼내서</b> 요리하고 그대로 내놓습니다.</p>
+      <p>간이 짜도, 재료가 상했어도 <b>그냥 나갑니다.</b> 손님이 알아서 판단해야 해요.</p>
+    </div>
+    <div class="b"><h4>👨‍🍳 에이전트 (= 요리사)</h4>
+      <p>필요한 재료를 <b>골라서</b> 꺼내고, 만든 뒤 <b>맛을 봅니다.</b></p>
+      <p>짜면 <b>스스로 다시 만듭니다.</b> 재료가 없으면 "이건 못 만들어요"라고 말합니다.</p>
+    </div>
+  </div>
+
+  <p>심사 기준 문장이 정확히 이걸 묻습니다:</p>
+  <div class="ex"><b class="t">심사 기준 ③ 원문</b>
+  <p style="font-size:17px">"여러 도구와 단계를 <b>스스로 엮어</b>, <b>사람이 끼어들지 않아도</b> 핵심 시나리오를 끝까지 풀어내는가"</p>
+  <p class="kicker">여기서 "도구"는 AI가 필요할 때 쓸 수 있는 기능들입니다 — 예: "이 커밋 내용 더 읽어줘", "이 문장 검사해줘".</p></div>
+</section>
+
+<section id="s2">
+  <h2>2. 지금 우리 서비스는 어떻게 돌아가나</h2>
+
+  <p>AI를 네 군데서 씁니다. <b>네 군데 모두 "한 번 물어보고 끝"</b>입니다.</p>
+
+  <div class="tblw"><table>
+    <tr><th>언제</th><th>AI가 하는 일</th><th>방식</th></tr>
+    <tr><td>분석할 때</td><td>커밋 200개를 "경험 덩어리"로 묶기</td><td>한 번 물어봄</td></tr>
+    <tr><td>카드 만들 때 ①</td><td>커밋 변경 내용을 한 줄 요약으로</td><td>한 번 물어봄</td></tr>
+    <tr><td>카드 만들 때 ②</td><td>요약을 모아 자소서 STAR 4칸 쓰기</td><td>한 번 물어봄</td></tr>
+    <tr class="good"><td>되묻기</td><td><b>빈 칸을 보고 "뭘 물어볼지" 정하기</b></td><td>한 번 물어봄 — 단 <b>판단은 AI가 함</b> ⭐</td></tr>
+  </table></div>
+
+  <p class="q">그런데 — 검사는 이미 잘 하고 있습니다</p>
+
+  <p>AI가 자소서 카드를 써서 돌려주면, 우리 코드가 <b>6가지를 검사</b>합니다:</p>
+
+  <div class="ex"><b class="t">지금 돌아가는 검사 (star_generator)</b>
+  <p>① 빈 칸인가 → 비움<br>
+  ② AI가 적은 커밋 번호가 <b>진짜 있는 커밋인가</b> → 없으면 그 번호 버림<br>
+  ③ 근거가 하나도 없는 문장 → <b>통째로 삭제</b><br>
+  ④ 사용자 답변에만 기댄 문장 → "확인 필요" 표시<br>
+  ⑤ <b>"30% 개선" 같은 숫자의 출처가 있나</b> → 없으면 "확인 필요" 표시<br>
+  ⑥ 비밀번호·키 같은 게 섞였나 → 가림</p></div>
+
+  <div class="note g"><p><b>이건 조사한 팀 중에서도 손에 꼽을 만큼 꼼꼼합니다.</b> 발표에서 "AI가 거짓말하면 어떻게 막나요?"라는 질문이 나오면 이 6단계를 그대로 답하면 됩니다.</p></div>
+
+  <p class="q">문제는 — <b>검사 결과를 AI한테 안 알려줍니다</b></p>
+
+  <div class="ex"><b class="t">지금 실제로 일어나는 일</b>
+  <p>AI: "이 프로젝트로 <b>응답 속도를 30% 개선</b>했습니다. (근거: 커밋 a1b2c3d)"<br><br>
+  코드: <i>(검사) 음… '30%'라는 숫자가 커밋 어디에도 없네. 커밋 a1b2c3d도 이 경험 목록에 없고.</i><br><br>
+  코드: <i>그럼 이 문장은 "확인 필요" 딱지를 붙이고… 커밋 번호는 지우자.</i><br><br>
+  <b>→ 끝. AI는 자기가 틀렸다는 걸 모릅니다.</b><br>
+  <b>→ 사용자는 노란 딱지가 붙은 문장이나 빈 칸을 봅니다.</b></p></div>
+
+  <p>요리사 비유로 돌아가면 — <b>맛을 보긴 하는데, 짜다는 걸 알고도 요리사한테 말을 안 하고 그냥 손님한테 "좀 짤 수 있음" 쪽지를 붙여서 내보내는</b> 상황입니다.</p>
+</section>
+
+<section id="s3">
+  <h2>3. 그래서 왜 점수가 깎이나</h2>
+
+  <div class="tblw"><table>
+    <tr><th>심사가 보는 것</th><th>우리</th><th>쉽게 말하면</th></tr>
+    <tr class="bad"><td>도구를 스스로 골라 쓴다</td><td>❌</td><td>AI한테 재료를 <b>한 번에 다 주고</b> 끝. AI가 "이거 더 보여줘"를 못 함</td></tr>
+    <tr class="bad"><td>결과를 보고 다음 행동을 정한다</td><td>❌</td><td>검사해서 틀려도 <b>다시 쓰게 하지 않음</b></td></tr>
+    <tr class="bad"><td>과정이 기록으로 남는다</td><td>❌</td><td>AI가 몇 번 일했는지 <b>세는 칸은 있는데 안 채움</b></td></tr>
+    <tr class="good"><td>모델이 판단한다</td><td>✅</td><td>되묻기에서 "뭘 물어볼지"는 AI가 정함</td></tr>
+  </table></div>
+
+  <p class="q">현장 발표에서 더 아픕니다</p>
+
+  <p>현장 심사(20점)는 <b>영상과 데모로</b> 봅니다. 제출물 안내에도 이렇게 적혀 있습니다:</p>
+  <div class="ex"><p style="font-size:17px">시연 영상 — "<b>에이전트가 스스로 판단하고 움직이는 장면</b>이 드러나게 담아주세요."</p></div>
+  <p><b>지금은 그 장면을 찍을 화면이 없습니다.</b> AI가 일하는 건 다 서버 안에서 벌어지고, 화면에는 결과만 나오니까요.</p>
+
+  <div class="note r"><p><b>정리:</b> 멘토 심사 10점 + 현장 심사 20점 = <b>30점</b>. 우리가 가장 많이 잃고 있는 항목입니다.</p></div>
+</section>
+
+<section id="s4">
+  <h2>4. 뭘 하면 되나 — 3단계</h2>
+
+  <p class="q">핵심은 <b>"검사 결과를 AI에게 돌려주는 것"</b> 하나입니다.</p>
+  <p>새 기능을 만드는 게 아닙니다. <b>이미 있는 검사기를 AI 뒤에 한 바퀴 연결</b>하면 됩니다.</p>
+
+  <div class="todo">
+    <span class="n">1</span><h3>계측 — AI가 한 일을 기록하기</h3><span class="who">AI 담당 · 반나절</span>
+    <p class="meta">위험도: 없음 (동작이 바뀌지 않음)</p>
+    <p>AI가 <b>몇 번 일했는지, 뭘 읽었는지, 몇 번 고쳤는지, 토큰을 얼마나 썼는지</b>를 남깁니다. 지금 <code>tool_calls_made</code> 라는 칸이 있는데 API마다 뜻이 제각각이고 자소서 쪽은 0으로 비어 있습니다.</p>
+
+    <p class="q" style="font-size:16px;margin:18px 0 8px">왜 필요한가 — 세 가지</p>
+
+    <div class="ex"><b class="t">① 영상에 보여줄 게 이것뿐입니다 ← 제일 큼</b>
+    <p>AI가 "다시 썼다"는 건 <b>전부 서버 안에서 벌어집니다.</b> 화면에는 완성된 카드만 나와요. 기록해두지 않으면 심사자 눈에는 <b>지금과 똑같은 화면</b>입니다.</p>
+    <pre>AI 작업 과정                      <span class="c">← 이 화면을 만들려면</span>
+근거 7건 중 3건을 골라 읽음         <span class="c">"몇 개 읽었는지" 기록이 있어야</span>
+검증: '30% 개선' 출처 없음          <span class="c">"뭐가 걸렸는지" 기록이 있어야</span>
+다시 씀 → 통과                     <span class="c">"몇 번 고쳤는지" 기록이 있어야</span></pre>
+    <p>제출물 안내가 요구하는 <b>"에이전트가 스스로 판단하고 움직이는 장면"</b>이 바로 이 기록입니다. <b>계측 없이 루프만 만들면 점수로 안 바뀝니다.</b></p></div>
+
+    <div class="ex"><b class="t">② 효과를 숫자로 말할 수 있습니다</b>
+    <p>심사 ⑥이 <i>"실패를 분석해 고친 기록이 있는가"</i> 입니다. 계측이 있으면 이렇게 말합니다:</p>
+    <p style="font-size:16px;padding-left:14px;border-left:3px solid var(--color-green)">"고쳐쓰기 루프를 넣고 빈 칸이 <b>23% → 9%</b>로 줄었습니다. LLM 호출은 카드당 <b>1.2회 → 1.6회</b> 늘었습니다."</p>
+    <p>계측이 없으면 <b>"좋아진 것 같습니다"</b> 밖에 못 합니다. 그래서 <b>루프를 넣기 전에 먼저 재둬야</b> 비교할 기준선이 생깁니다.</p></div>
+
+    <div class="ex"><b class="t">③ 비용 질문의 답이 됩니다</b>
+    <p>발표에서 <b>"운영비 얼마나 드나요"</b> 는 거의 확실히 나옵니다. 호출 수·토큰을 세고 있으면 바로 답하고, 없으면 <b>"측정 안 해봤습니다"</b> 가 됩니다.</p></div>
+
+    <div class="note"><p><b>순서는 바꿔도 됩니다.</b> 1번에 둔 건 위험이 0이라 오늘 당장 시작할 수 있어서입니다. 급하면 <b>루프(3단계)부터 만들고 계측을 나중에 붙여도</b> 됩니다. <b>단 영상 촬영 전에는 반드시 있어야</b> 합니다 — 화면에 과정을 띄우려면 그 데이터가 필요하니까요.</p></div>
+  </div>
+
+  <div class="todo">
+    <span class="n">2</span><h3>검사기를 떼어내기 — 정리 작업</h3><span class="who">AI 담당 · 반나절</span>
+    <p class="meta">위험도: 없음 (기존 테스트가 그대로 통과하면 성공)</p>
+    <p>지금 검사 6단계는 <b>"결과를 포장하는 함수" 안에 섞여</b> 있습니다. 이걸 <code>check_draft()</code> 라는 <b>별도 함수로 꺼냅니다.</b></p>
+    <p>그리고 결과를 사람이 읽는 말로 돌려주게 합니다:</p>
+    <pre>문제 2건 발견
+  · 결과 칸: 'a1b2c3d' 는 이 경험의 근거 목록에 없는 커밋입니다
+  · 행동 칸: '30% 개선' 의 출처를 근거에서 찾을 수 없습니다</pre>
+    <p><b>왜 이게 필요한가?</b> 3단계에서 <b>이 문장을 그대로 AI에게 보여줄</b> 거라서요.</p>
+  </div>
+
+  <div class="todo">
+    <span class="n">3</span><h3>다시 쓰게 하기 — 이게 핵심</h3><span class="who">AI 담당 · 2일</span>
+    <p class="meta">위험도: 낮음 (스위치로 감싸고, 실패하면 지금 방식으로 자동 복귀)</p>
+    <p>흐름이 이렇게 바뀝니다:</p>
+    <pre>AI가 초안을 씀
+   ↓
+<span class="hi">검사</span>
+   ├─ 통과 → 완료                      <span class="c">← 대부분 여기서 끝</span>
+   └─ 문제 발견
+         ↓
+      <span class="hi">문제 목록을 AI에게 보여주고 "이 부분만 고쳐 쓰세요"</span>
+         ↓
+      다시 검사 → 통과하면 완료
+         ↓
+      2번 고쳐도 안 되면 → 그 칸은 비우고 "답변하기" 버튼 노출
+         ↓
+   <span class="bad">시간 초과·오류 → 지금 방식으로 그냥 진행</span>   <span class="c">← 안전망</span></pre>
+
+    <div class="note g"><p><b>왜 안전한가</b><br>
+    ⓐ <b>실패하면 지금 코드로 돌아갑니다.</b> 루프가 통째로 망가져도 서비스는 오늘과 똑같이 동작합니다.<br>
+    ⓑ <b>스위치로 켜고 끕니다.</b> 꺼진 채로 머지하고 → 운영에서 켜서 확인하고 → 이상하면 끕니다. <b>#190·#193에서 이미 해본 방식</b>입니다.<br>
+    ⓒ 최종 결과는 <b>여전히 기존 검사 6단계를 통과해야</b> 나갑니다. 품질이 떨어질 수가 없습니다.</p></div>
+  </div>
+
+  <div class="todo">
+    <span class="n">4</span><h3>화면에 보여주기 — 영상의 주인공</h3><span class="who">프론트 · 1일</span>
+    <p class="meta">위험도: 없음 (표시만 추가)</p>
+    <p><b>루프를 만들어도 화면에 안 보이면 심사에서 0점입니다.</b> 서버 안에서만 일어나니까요.</p>
+    <p>카드 화면에 <b>"AI 작업 과정 보기"</b> 접는 영역 하나를 만들고, 펼치면 이렇게 보이게:</p>
+    <pre>근거 7건 중 3건을 골라 읽음
+초안 작성
+<span class="bad">검증: '응답 30% 개선' 의 출처를 찾지 못함</span>
+<span class="hi">같은 칸을 근거에 있는 내용으로 다시 씀</span>
+<span class="ok">검증 통과 · 4칸 완성</span></pre>
+    <p><b>이 5줄이 시연 영상의 핵심 장면이 됩니다.</b> 제출물 안내가 요구하는 "에이전트가 스스로 판단하고 움직이는 장면"이 바로 이거예요.</p>
+  </div>
+
+  <h3>덤 — 반나절짜리 하나 더</h3>
+  <div class="ex"><b class="t">문서가 코드를 부정하고 있습니다</b>
+  <p><code>docs/GUARDRAILS.md</code> 표에 <b>"되묻기 질문: LLM 을 부르지 않는 템플릿"</b> 이라고 적혀 있는데, 실제 코드(<code>interviews.py:66</code>)는 <b>LLM을 부릅니다.</b></p>
+  <p>우리가 가진 <b>유일한 AI 자율성을 문서가 없다고 말하고 있는 상황</b>입니다. 심사자가 코드와 문서를 같이 보면 다른 주장까지 의심합니다. <b>문서만 고치면 ③과 ⑦이 같이 올라갑니다.</b></p></div>
+
+  <h3>일정으로 놓으면</h3>
+  <pre>1·2단계 (위험 0)   →  오늘이라도 시작 가능 · 하루
+3단계  (핵심)      →  2일 · 스위치 꺼진 채 머지 → 켜서 확인
+4단계  (화면)      →  1일 · 3단계 끝난 뒤
+덤 (문서 수정)     →  반나절 · 아무 때나
+────────────────────────────────────────
+합계 약 4~5일  ·  <b>10/31까지 끝내면 11월은 영상·발표에 집중</b></pre>
+
+  <div class="note b"><p><b>왜 11/1 전에 끝내야 하나</b> — 시연 영상에 이 장면이 들어가야 하는데, <b>영상은 기능이 완성된 뒤에만 찍을 수 있습니다.</b> 제출 마감은 11/11이고 영상·발표 자료에도 시간이 필요합니다.</p></div>
+</section>
+
+<section id="s5">
+  <h2>5. 나올 만한 질문</h2>
+
+  <div class="note b"><p>🔎 <b>다른 서비스들이 실제로 어떻게 하는지 조사했습니다</b> → <a href="industry-1025.html">업계 사례 문서</a> — Devin·Cursor·Lovable 등 10개 제품의 과정 표시 방식, 재시도 한도가 업계 공통이라는 근거, 계측 최소 5순위.</p></div>
+
+  <p class="q">Q. LangChain 같은 걸 써야 하나요?</p>
+  <p><b>아니요.</b> B팀(상위권)이 <b>프레임워크 없이 직접</b> 만들어서 증명했습니다. 우리가 필요한 건 "검사 → 다시 쓰기"를 최대 2번 반복하는 <b>반복문 하나</b>입니다. 직접 짜는 게 더 작고, 발표나 면접에서 <b>"직접 이해하고 만들었다"가 훨씬 세게 먹힙니다.</b></p>
+
+  <p class="q">Q. AI 호출이 늘어서 돈이 더 들지 않나요?</p>
+  <p>늘어나는 건 <b>검사에 실패했을 때뿐</b>입니다. 통과하면 지금과 똑같이 1번이에요. 그리고 <b>그때 늘어나는 게 바로 가치</b>입니다 — 빈 칸이나 노란 딱지 대신 제대로 된 문장이 나오는 거니까요.</p>
+  <p>시간 예산도 이미 넉넉합니다. 지금 코드에 <b>150초까지 기다리게</b> 설정돼 있는데(서버는 180초), 보통 한 번 호출이 10~30초라 <b>2~3번 더 할 여유가 있습니다.</b></p>
+
+  <p class="q">Q. 마감 2주 전에 AI 핵심을 건드려도 되나요?</p>
+  <p>1·2단계는 <b>동작이 전혀 안 바뀝니다</b>(계측 추가 + 함수 분리). 3단계는 스위치로 감싸고 실패하면 지금 코드로 돌아갑니다. <b>최악의 경우에도 오늘의 서비스</b>이고, 이건 팀이 이미 여러 번 써본 방식입니다.</p>
+
+  <p class="q">Q. 되묻기도 AI가 판단하는데, 그걸로는 부족한가요?</p>
+  <p>부족합니다. "AI가 질문을 고른다"는 <b>말로 하는 설명</b>이고, 심사는 <b>눈에 보이는 증거</b>를 봅니다. 상위권 팀들 중 4팀이 "AI가 스스로 도구를 쓰고 고치는" 구조를 갖고 있어요.</p>
+  <p>다만 되묻기는 <b>버리지 말고 같이 주장</b>해야 합니다 — 지금 문서가 이걸 부정하고 있는 게 문제라 위의 "덤"을 꼭 하세요.</p>
+
+  <p class="q">Q. 이거 하면 점수가 얼마나 오르나요?</p>
+  <div class="tblw"><table>
+    <tr><th>항목</th><th>지금</th><th>후</th></tr>
+    <tr><td>멘토 ③ Agentic 경험 (10점)</td><td>4</td><td><b>8</b></td></tr>
+    <tr><td>멘토 ⑤ Agentic 설계 (중위권) — "도구 연동" 칸</td><td>13</td><td><b>14</b></td></tr>
+    <tr><td>현장 ③ Agentic 경험 (20점)</td><td colspan="2"><b>영상에 보여줄 장면이 생김</b></td></tr>
+    <tr><td>제출물 2번 시연 영상 · 5번 테크스펙</td><td colspan="2">요구사항 충족</td></tr>
+  </table></div>
+</section>
+
+
+<nav class="pager">
+  <a class="prev" href="improve-1025.html"><span class="lbl">← 이전</span><span class="ttl">보완 계획</span></a>
+  <a class="next" href="agentic-1025.html"><span class="lbl">다음 →</span><span class="ttl">Agentic 설계</span></a>
+</nav>
+
+<p class="foot">2026-10-25 · 기술 설계와 파일 경로는 <a href="agentic-1025.html">AI 에이전트 상세 설계</a> · 전체 보완 계획은 <a href="improve-1025.html">여기</a> · 전체 자료</p>
+</div>
+</body>
+</html>

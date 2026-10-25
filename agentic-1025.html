@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 에이전트 상세 설계 — Gitory</title>
+<link rel="stylesheet" href="claude/tokens.css">
+<link rel="stylesheet" href="claude/style.css">
+<link rel="stylesheet" href="nav.css">
+<style>
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0;max-width:78ch}
+.vs .col{border:1px solid var(--color-rule);border-radius:var(--radius-md);padding:15px 17px;background:var(--color-surface)}
+.vs .col h4{margin:0 0 9px;font-size:13px;letter-spacing:.03em;color:var(--color-ink);border:0;padding:0}
+.vs .now{border-left:4px solid var(--color-amber)}
+.vs .next{border-left:4px solid var(--color-green)}
+.vs .col p{font-size:14px;margin:6px 0}
+.step{border:1px solid var(--color-rule);border-left:5px solid var(--color-ink);border-radius:var(--radius-md);padding:16px 20px;margin:16px 0;max-width:80ch;background:var(--color-surface)}
+.step>h4{margin:0 0 10px;font-size:15.5px;color:var(--color-ink);font-weight:700}
+.step .meta{font:600 11.5px var(--font-code);color:var(--color-muted);margin-bottom:10px}
+.badge{display:inline-block;font:700 10.5px var(--font-body);padding:2px 9px;border-radius:999px;vertical-align:2px;margin-left:6px}
+.b-have{background:oklch(90% 0.07 142);color:oklch(33% 0.08 142)}
+.b-new{background:oklch(90% 0.08 86);color:oklch(35% 0.1 70)}
+.b-fix{background:oklch(89% 0.09 29);color:oklch(33% 0.12 29)}
+.scene{border:1px dashed var(--color-rule);border-radius:var(--radius-md);padding:14px 18px;margin:14px 0;max-width:78ch;background:var(--color-paper)}
+.scene .t{font:600 11.5px var(--font-code);color:var(--color-muted);display:block;margin-bottom:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="docnav">
+  <a class="home" href="index.html">⌂ 전체</a>
+  <span class="sep"></span>
+  <a class="d" href="roadmap-1026.html"><span class="k">★</span>회의 반영</a>
+  <a class="d" href="rubric-1025.html"><span class="k">01</span>심사 100점</a>
+  <a class="d" href="improve-1025.html"><span class="k">02</span>보완 계획</a>
+  <a class="d" href="agentic-easy.html"><span class="k">03</span>Agentic 쉽게</a>
+  <a class="d on" href="agentic-1025.html"><span class="k">04</span>Agentic 설계</a>
+  <a class="d" href="industry-1025.html"><span class="k">05</span>업계 사례</a>
+  <a class="d" href="readme-1025.html"><span class="k">06</span>README</a>
+</nav>
+
+<header class="hero">
+  <h1>AI 에이전트 상세 설계</h1>
+  <p class="context">Gitory · 심사 배점 <b>45점</b>(멘토 ③10 + ⑤15 + 현장 ③20)이 "에이전트"에 걸려 있음 · 기준 <code>origin/develop</code> 코드 실측</p>
+  <p>지금 AI가 뭘 하고 있는지 · 뭘 못 하는지 · <b>무엇을 더 해줘야 하는지</b>를 함수 단위까지</p>
+  <p class="owner">🧭 어려우면 쉽게 읽는 판 먼저 · 전체 계획은 <a href="improve-1025.html">보완 계획</a></p>
+</header>
+
+<nav class="toc">
+  <b>목차</b>
+  <a href="#s0">0. 정정 — 전제 2개가 틀렸습니다</a>
+  <a href="#s1">1. 지금 AI가 하는 일 전부</a>
+  <a href="#s2">2. 진짜 빈 칸은 어디인가</a>
+  <a href="#s3">3. 설계 — 초안 에이전트</a>
+  <a href="#s3a" class="sub">3-1. 도구 3개</a>
+  <a href="#s3b" class="sub">3-2. 루프와 예산</a>
+  <a href="#s3c" class="sub">3-3. 프롬프트 변경</a>
+  <a href="#s3d" class="sub">3-4. 화면에 보일 것</a>
+  <a href="#s4">4. 되묻기 강화</a>
+  <a href="#s5">5. 그룹화 라우팅</a>
+  <a href="#s6">6. 구현 순서</a>
+  <a href="#s7">7. 측정·발표</a>
+  <a href="#s8">8. 리스크</a>
+</nav>
+
+<section id="s0">
+  <h2>0. 먼저 — 초기 분석의 정정 사항</h2>
+  <div class="note r"><p><b>코드를 더 깊이 읽고 전제 2개를 정정합니다.</b> 초기 분석의 "지어낸 숫자가 그대로 통과한다"는 <b>사실이 아니었습니다.</b> 출력 검증은 이미 동작하고 있습니다.</p></div>
+
+  <div class="tblw"><table>
+    <tr><th>이전 주장</th><th>실제 (코드 확인)</th></tr>
+    <tr class="bad"><td>"지어낸 숫자가 그대로 통과한다"</td><td><b>틀림.</b> <code>star_generator.py:314</code> 가 <code>unsupported_metrics()</code> 를 호출해 출처 없는 수치를 잡고 <b>NEEDS_REVIEW 로 강등</b>. <code>interview_llm.py:206</code> 에서도 씀 — 잠자는 부품이 아니라 <b>현역</b></td></tr>
+    <tr class="bad"><td>"read_context 로 PR·이슈를 읽는다"</td><td><b>틀림.</b> <code>StarAnalysisRequest</code> 에는 PR/이슈 전체 컨텍스트가 없음. <code>evidence</code>(diff 요약) · <code>pull_request_body</code>(대표 PR 본문 1개) · <code>confirmed_answers</code> · <code>dependency_files</code> 뿐</td></tr>
+    <tr class="warn"><td>"45초 예산으로"</td><td><b>부정확.</b> 이미 <code>deadline_seconds=150</code>(Spring 대기 180초, <code>application.yml:119</code>) · <code>max_attempts=2</code> · <code>min_call_seconds=10</code>. <b>예산은 이미 넉넉함</b> — 새로 정할 게 아니라 쓰면 됨. 단 <b>한 요청에 카드 8장까지</b>(<code>CardCreationController:35</code>) 가능하므로 Job 전체 대기·워커 점유를 같이 재야 함</td></tr>
+    <tr class="bad"><td>"<code>tool_calls_made</code> 는 전부 0 고정"</td><td><b>틀림.</b> <code>/diff-evidence</code> 는 GitHub API 호출 수를, <code>/interview-turns</code> 는 LLM 사용 여부를 0/1로 반환(<code>interviews.py:69</code>). <b>진짜 문제는 API마다 뜻이 다르고 STAR만 0</b>이라는 것 — 넣기 전에 <b>필드 의미부터 합의</b>해야 함</td></tr>
+    <tr class="bad"><td>"문장이 diff에 근거하는지 검증하는 완성품"</td><td><b>과한 표현.</b> <code>match_commit_sha</code> 는 <b>SHA 대조</b>, <code>unsupported_metrics</code> 는 <b>숫자 표현의 출처 대조</b>뿐. <b>문장의 의미가 diff에 근거하는지는 아무도 검증하지 않습니다</b> — 그건 Critic LLM(H팀 방식)이 필요한 별개 과제</td></tr>
+  </table></div>
+  <p class="kicker">정정 출처: 다른 에이전트의 교차검증(2026-10-25) + 제 재확인. 이렇게 틀린 걸 남겨두는 이유는 <b>이 문서로 의사결정을 하실 것이기 때문</b>입니다.</p>
+
+  <p>그래서 진단이 더 정확해지고, 좋은 쪽으로 바뀝니다:</p>
+  <div class="say">검증기는 <b>이미 전국 최상위</b>입니다. 문제는 검증 결과가 <b>모델에게 돌아가지 않는다</b>는 것 — 틀리면 지우거나 딱지를 붙일 뿐, <b>다시 쓰게 하지 않습니다.</b></div>
+  <p class="kicker">한 바퀴만 연결하면 됩니다. 그게 "에이전트"와 "파이프라인"의 차이입니다.</p>
+</section>
+
+<section id="s1">
+  <h2>1. 지금 우리 AI가 하는 일 — 전부</h2>
+
+  <h3>LLM을 부르는 곳 4군데</h3>
+  <div class="tblw"><table>
+    <tr><th>어디서</th><th>뭘 시키나</th><th>방식</th><th>실패하면</th></tr>
+    <tr><td><code>grouping_llm.py</code></td><td>커밋 200개를 "경험 후보" 79개로 묶기</td><td>한 번 호출</td><td>스위치 꺼짐과 동일 — 수집만 하고 정상 종료</td></tr>
+    <tr><td><code>diff_analyzer.py</code></td><td>커밋별 diff를 "이 커밋이 한 일" 요약으로</td><td>한 번 호출</td><td>커밋 메시지로 대체(<code>COMMIT_MESSAGE</code> 출처 표기)</td></tr>
+    <tr><td><code>star_generator.py</code></td><td>근거 묶음 → 자소서 STAR 4칸</td><td>한 번 호출<br>(형식 안 맞으면 재시도 1회)</td><td>타임아웃 시 4칸 비움, 형식 실패 2회면 에러</td></tr>
+    <tr><td><code>interview_llm.py</code> ⭐</td><td>빈 칸 보고 <b>다음에 뭘 물을지 결정</b>+질문 생성</td><td>한 번 호출</td><td>규칙 템플릿 질문으로 폴백</td></tr>
+  </table></div>
+  <p class="kicker">⭐ = 현재 유일하게 "모델이 무언가를 결정하는" 지점입니다. 지킬 것.</p>
+
+  <h3>검증은 이미 이만큼 합니다 <span class="tag t-lo">star_generator._to_response</span></h3>
+  <pre>모델이 STAR 4칸을 써서 돌려주면, 칸마다:
+
+1. 빈 칸·빈 텍스트          → EMPTY 로 비움
+2. 모델이 적은 커밋 SHA     → <span class="hi">match_commit_sha()</span> 로 입력 커밋과 대조
+                              맞출 수 없는 SHA 는 <span class="bad">버림</span>
+3. 근거 0개가 된 문장       → <span class="bad">통째로 삭제</span> (removed_claims 에 기록)
+                              "근거 0개 문장은 화면에 뜨면 안 된다(규칙 4)"
+4. 답변에만 의존한 문장     → HIGH 금지, <span class="hi">NEEDS_REVIEW</span> 강등
+5. 출처 없는 수치           → <span class="hi">unsupported_metrics()</span> 로 탐지
+                              "30% 개선" 같은 게 근거에 없으면 <span class="hi">NEEDS_REVIEW</span> 강등
+6. 비밀값                   → <span class="hi">redact_secrets()</span> 로 가림</pre>
+  <div class="note g"><p><b>강점 구간입니다.</b> 조사한 팀 중 이 정도로 출력 검증을 촘촘히 하는 팀은 손에 꼽습니다. 발표에서 "환각을 어떻게 막나요"에 이 6단계를 그대로 답하면 됩니다.</p></div>
+</section>
+
+<section id="s2">
+  <h2>2. 그래서 진짜 빈 칸은 어디인가</h2>
+
+  <div class="vs">
+    <div class="col now"><h4>⚠️ 지금 — 검증 결과가 사라짐</h4>
+      <p>모델이 틀린 SHA를 적음 → 코드가 <b>조용히 버림</b> → 문장이 사라지거나 "확인 필요"가 붙음 → <b>모델은 자기가 틀렸다는 걸 영영 모름</b></p>
+      <p>사용자가 보는 것: <i>빈 칸 또는 노란 딱지</i></p></div>
+    <div class="col next"><h4>✅ 제안 — 결과를 돌려줌</h4>
+      <p>모델이 틀린 SHA를 적음 → 코드가 잡음 → <b>"이 SHA는 입력에 없어요. 다시 쓰세요"를 모델에게 전달</b> → 모델이 고쳐 씀 → 통과</p>
+      <p>사용자가 보는 것: <i>채워진 칸 + 고친 과정</i></p></div>
+  </div>
+
+  <h3>못 하는 일 4가지 (= 심사 ③에서 깎이는 이유)</h3>
+  <div class="tblw"><table>
+    <tr><th></th><th>지금</th><th>심사 기준 문장</th></tr>
+    <tr class="bad"><td><b>스스로 고치기</b></td><td>검증 실패 = 포기(버리거나 강등)</td><td>"사람이 끼어들지 않아도 끝까지 풀어내는가"</td></tr>
+    <tr class="bad"><td><b>더 읽기</b></td><td>입력으로 준 것만. 모델이 "이 커밋 더 보고 싶다"를 못 함</td><td>"여러 도구와 단계를 스스로 엮어"</td></tr>
+    <tr class="bad"><td><b>모르면 묻기</b></td><td>근거 없으면 그냥 비움. 사용자에게 묻지 않음<br><span class="kicker">(되묻기는 카드 생성이 끝난 뒤 별도 단계)</span></td><td>"도구 연동"</td></tr>
+    <tr class="bad"><td><b>과정 남기기</b></td><td><code>tool_calls_made</code> 의 뜻이 API마다 다름 — diff-evidence는 GitHub 호출 수, interview는 0/1, <b>STAR·groups는 0 고정</b>. 통일된 계측이 없음</td><td>심사자가 볼 증거가 없음</td></tr>
+  </table></div>
+  <div class="note"><p><b>검증의 한계도 분명히.</b> 지금 검증은 <b>SHA가 입력에 있나</b>와 <b>숫자의 출처가 있나</b> 두 가지입니다. "이 문장이 diff 내용과 맞는가"는 <b>검증하지 않습니다</b> — 모델이 근거 SHA를 정확히 달고 숫자를 안 쓰면서 내용을 지어내면 못 잡습니다. 이건 Critic LLM이 필요한 별개 과제라 이번 범위에서 뺐습니다.</p></div>
+</section>
+
+<section id="s3">
+  <h2>3. 설계 — 초안 에이전트</h2>
+  <p class="kicker">카드 초안(DRAFT Job)의 <code>StarGenerator.generate()</code> 안쪽만 바꿉니다. Spring·FE·DB 계약 변경 0.</p>
+
+  <h3 id="s3a">3-1. 도구 3개 (+1개 보류) — 모델이 쓸 수 있는 행동</h3>
+  <p>※ 정정 반영: PR/이슈 전체 컨텍스트는 요청에 없으므로 <b>읽기 도구는 요청 안의 재료만 다룹니다.</b></p>
+
+  <div class="step">
+    <h4><code>read_evidence(sha)</code> <span class="badge b-have">부품 있음</span></h4>
+    <p class="meta">재료: <code>request.evidence[]</code> (DiffEvidence — sha · summary · changed_paths · source)</p>
+    <p>지금은 모든 근거를 <b>한 번에 payload에 때려 넣습니다.</b> 이걸 "목록만 먼저 주고, 필요한 것만 펼쳐 읽게" 바꿉니다. 근거가 20개여도 모델이 관련된 5개만 깊이 읽으면 되고, <b>"무엇을 읽을지 고르는 행위" 자체가 ③의 증거</b>가 됩니다.</p>
+    <p class="kicker">새 코드: 조회 함수 + payload 분리 ~25줄</p>
+  </div>
+
+  <div class="step">
+    <h4><code>check_draft(draft)</code> <span class="badge b-have">완성품 재사용</span></h4>
+    <p class="meta">재료: <code>evidence_checks.match_commit_sha()</code> · <code>unsupported_metrics()</code> — 이미 <code>_to_response</code> 에서 쓰는 그 함수들</p>
+    <p>지금 <b>맨 끝에서 한 번</b> 하는 검증을 <b>루프 안으로 끌어올려</b> 모델이 결과를 받게 합니다. 반환은 사람이 읽는 문장으로:</p>
+    <pre>{"ok": false, "problems": [
+  {"slot":"R", "type":"UNKNOWN_SHA", "detail":"a1b2c3d 는 이 경험의 근거 목록에 없습니다"},
+  {"slot":"A", "type":"UNSOURCED_NUMBER", "detail":"'30% 개선' 의 출처를 근거에서 찾을 수 없습니다"}
+]}</pre>
+    <p class="kicker">새 코드: 어댑터 ~30줄 (판정 로직은 기존 함수 그대로)</p>
+  </div>
+
+  <div class="step">
+    <h4><code>ask_user(slot, question)</code> <span class="badge b-fix">Spring 변경 필요 — 후순위</span></h4>
+    <p class="meta">재료: 되묻기 인프라 — 단 <b>소유자가 Spring</b></p>
+    <p>두 번 고쳐도 근거가 없으면 지어내지 말고 <b>빈 칸으로 두되 질문을 남긴다</b>는 아이디어입니다.</p>
+    <div class="note r"><p><b>교차검증에서 걸러진 제 착각</b> — "20줄이면 재사용"이라고 썼는데 <b>틀렸습니다.</b> 질문의 순번·횟수 제한·영속 저장은 전부 <b>Spring <code>InterviewAskService</code> 가 소유</b>하고(<code>interviews.py:45</code> 에 명시), AI 서비스는 질문을 <b>생성해 반환만</b> 합니다. 카드 초안 경로(<code>CardDraftRunner</code>)는 되묻기 저장 경로와 아예 다릅니다. 루프 안에서 질문을 만들어 저장·중단·재개하려면 <b>Spring Job/질문 생명주기를 바꿔야 합니다.</b></p></div>
+    <p><b>그래서 이번 범위에서 뺍니다.</b> 대신 같은 효과를 싸게 내는 대안 — 에이전트가 "이 칸은 근거가 없어 못 씁니다"를 <b>응답 필드로 올리고</b>(<code>insufficient_reason</code> 은 이미 있음), 화면이 그 칸에 기존 "답변하기" 버튼을 노출. <b>계약 변경 없이</b> "모르면 묻는다"가 사용자에게 같은 모습으로 보입니다.</p>
+  </div>
+
+  <div class="step">
+    <h4><code>submit(draft)</code> <span class="badge b-have">부품 있음</span></h4>
+    <p class="meta">재료: <code>StarDraftOutput</code> 스키마 그대로</p>
+    <p>검증 통과한 초안을 확정. 지금의 <code>_to_response</code> 가 그대로 받아서 후처리합니다 — <b>마지막 안전망은 유지</b>(루프가 놓쳐도 기존 6단계 검증이 또 걸러냄).</p>
+  </div>
+
+  <h3 id="s3b">3-2. 루프와 예산 — 이미 있는 상한을 쓴다</h3>
+  <pre>예산 (기존 StarGenerationLimits 그대로 활용)
+  deadline_seconds   150   <span class="c"># Spring 대기 180초보다 짧게 — 이미 설정돼 있음</span>
+  min_call_seconds    10   <span class="c"># 남은 시간이 10초 미만이면 새 호출 안 함 — 이미 있음</span>
+  <span class="hi">max_repair_rounds    2</span>   <span class="c"># ← 새로 추가 (고쳐쓰기 최대 2번)</span>
+  <span class="hi">max_tool_calls       8</span>   <span class="c"># ← 새로 추가 (읽기 포함 전체 상한)</span>
+
+흐름
+  1. 근거 목록(요약만) + 과제를 모델에게 제시
+  2. 모델이 read_evidence 로 필요한 근거를 펼쳐 읽음        <span class="ok">← 스스로 고름</span>
+  3. 초안 작성
+  4. check_draft
+       ├─ ok ──────────────→ submit → 끝                    <span class="c"># 대부분 여기</span>
+       └─ 문제 발견
+             ├─ 남은 라운드 있음 → <span class="hi">문제 목록을 모델에게 주고 재작성</span>  <span class="ok">← 스스로 고침</span>
+             └─ 라운드 소진 → 그 칸만 비우고 <span class="hi">insufficient_reason 기록</span>   <span class="ok">← 모르면 비움</span>
+                              <span class="c"># 화면이 그 칸에 "답변하기" 노출 → 계약 변경 0</span>
+  5. 시간 초과·예외 → <span class="bad">현행 단발 경로로 폴백</span>                  <span class="c"># 지금과 100% 동일</span></pre>
+
+  <div class="note g"><p><b>왜 안전한가</b> — ⓐ 폴백이 "지금 코드"라 루프가 통째로 죽어도 서비스는 오늘과 같습니다 ⓑ 기능 스위치(<code>CARD_AI_DRAFT_AGENT_ENABLED</code>)로 감싸 <b>꺼진 채 머지 → 운영에서 켜고 확인 → 이상하면 끄기</b> — #190·#193에서 이미 쓴 방식 ⓒ 출력은 여전히 <code>_to_response</code> 6단계 검증을 통과해야 하므로 <b>품질 하한이 내려갈 수 없습니다</b></p></div>
+
+  <h3 id="s3c">3-3. 프롬프트에 추가할 것</h3>
+  <p>시스템 프롬프트에 <b>행동 규칙</b>이 들어가야 합니다. 상위팀(G팀)이 프롬프트에 판단 원칙을 명문화해 점수를 받은 지점입니다.</p>
+  <pre>- 근거에 없는 수치·고유명사를 쓰지 않는다. 확신이 없으면 그 칸을 비우고 ask_user 로 묻는다.
+- 문장마다 근거 SHA 를 단다. 입력 목록에 없는 SHA 를 지어내지 않는다.
+- check_draft 가 문제를 돌려주면 <b>그 문제만</b> 고친다. 통과한 칸은 건드리지 않는다.
+- 근거를 다 읽을 필요는 없다. 쓰려는 문장에 필요한 것만 읽는다.</pre>
+
+  <h3 id="s3d">3-4. 화면·기록에 보일 것 <span class="tag t-hi">현장 ③ 20점의 핵심</span></h3>
+  <p>루프를 만들어도 <b>사용자가 못 보면 심사에서 0점</b>입니다. 과정을 남기고 보여줘야 합니다.</p>
+  <div class="tblw"><table>
+    <tr><th>어디</th><th>무엇을</th></tr>
+    <tr><td><code>Meta.tool_calls_made</code></td><td>⚠️ 넣기 전에 <b>의미 통일 먼저</b> — 지금 API마다 뜻이 다릅니다(GitHub 호출 수 / LLM 0·1 / 0 고정). <b>"도구 호출 횟수"로 정의를 하나 정하고</b> 4개 API를 맞춘 뒤 채우세요. A팀처럼 <b>"정상 루프는 안 세고 재시도만 센다"</b> 식 기준을 주석에 박으면 심사자가 신뢰합니다</td></tr>
+    <tr><td>응답에 <code>trace[]</code> 추가</td><td><code>[{"step":"read_evidence","target":"a1b2c3d"}, {"step":"check","result":"UNSOURCED_NUMBER"}, {"step":"repair","slot":"A"}, {"step":"submit"}]</code></td></tr>
+    <tr><td>카드 화면</td><td>"AI 작업 과정 보기" 접힘 영역 한 개 — 펼치면 trace가 사람 말로</td></tr>
+    <tr><td>로그</td><td>Job 당 LLM 호출 수·토큰 한 줄 (발표 "운영 비용" 슬라이드 재료)</td></tr>
+  </table></div>
+
+  <div class="scene"><span class="t">▶ 시연 영상에 들어갈 장면 (이게 목표물)</span>
+  <pre>AI 작업 과정
+  근거 7건 중 3건을 골라 읽음
+  초안 작성
+  <span class="bad">검증: '응답 30% 개선' 의 출처를 찾지 못함</span>
+  <span class="hi">같은 칸을 근거에 있는 내용으로 다시 씀</span>
+  <span class="ok">검증 통과 · 4칸 완성</span></pre>
+  <p class="kicker">심사 기준의 "사람이 끼어들지 않아도 끝까지 풀어내는가"에 <b>영상으로 답하는 6줄</b>입니다.</p></div>
+</section>
+
+<section id="s4">
+  <h2>4. 되묻기 강화 — 답을 평가하고 더 묻기</h2>
+  <p class="kicker">1일 · 부품 상태 확인 필요</p>
+  <p>지금: 질문 → 답변 → 칸 저장 → 끝. <b>답이 부실해도 한 번이면 통과합니다.</b></p>
+  <p>레포에 <code>llm_answer_sufficiency_evaluator.py</code>("B-2 답변 충분성 판정기")가 있습니다. 이걸 되묻기 뒤에 붙여:</p>
+  <pre>답변 ──→ 충분성 판정 ──충분──→ 칸 저장 (지금과 동일)
+             │
+             └─불충분 ──→ <span class="hi">"언제·얼마나가 비어 있어요" 후속 질문 1회</span> ──→ 저장
+                           <span class="c"># 상한 1회. 심문이 되면 사용자가 떠난다</span></pre>
+  <div class="note"><p><b>확인 필요</b> — 이 평가기가 지금 어디서 호출되는지 먼저 grep 하세요. <b>이미 운영에서 쓰고 있다면</b> 이 제안은 "연결"이 아니라 "강화"로 범위가 바뀝니다. (제가 <code>unsupported_metrics</code>를 "잠자는 부품"이라 잘못 본 전례가 있어 못 박습니다.)</p></div>
+</section>
+
+<section id="s5">
+  <h2>5. 그룹화 라우팅 — 판단을 아끼는 것도 판단</h2>
+  <p class="kicker">1일 · 선택 과제 · D팀(상위권) 패턴</p>
+  <p>지금은 커밋 200개를 <b>통째로</b> LLM에 넘깁니다. 그런데 그중 상당수는 <b>규칙으로 충분합니다</b> — 같은 PR에 속한 커밋들은 LLM 없이도 한 묶음이 맞으니까요.</p>
+  <pre>커밋 목록
+  ├─ 같은 PR 소속 (명확)  ──→ <span class="ok">규칙으로 묶음. LLM 호출 안 함</span>
+  └─ 떠도는 커밋 (애매)   ──→ LLM 에게 판단 요청
+                              <span class="c"># 호출량·비용 감소 + "왜 agentic 인가"의 설명</span></pre>
+  <p>발표 수치로도 좋습니다 — <b>"LLM 호출의 N%를 규칙이 대신합니다"</b>. D팀는 이 설계를 <b>그래프 구조</b>로 표현해서 ⑤ 만점을 받았습니다.</p>
+</section>
+
+<section id="s6">
+  <h2>6. 구현 순서 — 4단계로 쪼개기</h2>
+  <p class="kicker">이 팀 장기인 "작게 쌓아 올리는 PR"에 맞춰 나눴습니다. 각 단계가 독립적으로 머지 가능합니다.</p>
+  <div class="tblw"><table>
+    <tr><th>#</th><th>PR</th><th>내용</th><th>검증</th><th>걸리는 시간</th></tr>
+    <tr><td>1</td><td><b>계측 의미 통일 + 채우기</b></td><td>4개 API의 <code>tool_calls_made</code> 뜻을 하나로 정의 → STAR·groups도 채움 + 호출 수·토큰 로그. <b>기능 변화 0</b></td><td>네 API가 같은 뜻으로 숫자를 내나</td><td>반나절</td></tr>
+    <tr><td>2</td><td><b>검증기 분리</b></td><td><code>_to_response</code> 안의 검증을 <code>check_draft()</code> 로 추출. <b>동작 동일</b>(순수 리팩터링)</td><td>기존 테스트 전부 통과</td><td>반나절</td></tr>
+    <tr><td>3</td><td><b>고쳐쓰기 루프</b> ★</td><td>검증 실패 → 문제 목록 전달 → 재작성 ≤2회. 스위치로 감쌈</td><td>스위치 끄면 지금과 동일, 켜면 trace 생성</td><td>1.5일</td></tr>
+    <tr><td>4</td><td><b>읽기 도구 + trace UI</b></td><td><code>read_evidence</code> 로 근거를 골라 읽게 + 화면에 과정 표시</td><td>후보 20개로 before/after 비교</td><td>1.5일</td></tr>
+  </table></div>
+  <div class="note b"><p><b>3번까지만 해도 ③은 확보됩니다.</b> 4번은 "영상이 더 멋져지는" 단계라, 시간이 없으면 3번에서 멈추고 발표 준비로 넘어가세요. <b>1·2번은 리스크가 0이라 오늘이라도 시작 가능합니다.</b></p></div>
+</section>
+
+<section id="s7">
+  <h2>7. 측정 — 만들었으면 숫자로</h2>
+  <p>루프를 넣었으면 <b>효과를 재야</b> ⑥(AI 품질 점검)이 같이 올라갑니다. 심사 문장이 "실패를 분석해 고친 기록"이라 <b>문자 그대로</b> 들어맞습니다.</p>
+  <div class="tblw"><table>
+    <tr><th>측정</th><th>방법</th></tr>
+    <tr><td>검증 통과율</td><td>같은 후보 20개를 <b>스위치 끄고 / 켜고</b> 각각 생성 → 첫 검증에서 문제가 난 칸 비율 비교</td></tr>
+    <tr><td>빈 칸 비율</td><td>NO_EVIDENCE 로 비워진 칸 수 — 루프가 있으면 줄어야 함</td></tr>
+    <tr><td>NEEDS_REVIEW 비율</td><td>노란 딱지 붙은 칸 — 줄어야 함</td></tr>
+    <tr><td>비용</td><td>Job 당 LLM 호출 수·토큰 — <b>늘어난 만큼이 품질의 대가</b>. 솔직히 적는 게 신뢰를 삼</td></tr>
+  </table></div>
+  <p>결과는 <code>ai/evals/MEASUREMENTS.md</code> 에 D팀 규율로 — <b>모델명 필수 · 0건도 분모와 함께(0/80) · 날짜 · 데이터셋 출처</b>.</p>
+  <div class="say">발표 한 줄로: <b>"고쳐쓰기 루프를 넣고 빈 칸이 N% → M% 로 줄었습니다. LLM 호출은 카드당 평균 1.2회 → 1.6회 늘었습니다."</b></div>
+</section>
+
+<section id="s8">
+  <h2>8. 리스크와 반론</h2>
+  <div class="tblw"><table>
+    <tr><th>우려</th><th>답</th></tr>
+    <tr><td>"마감 17일 전에 AI 핵심을 건드린다?"</td><td>단계 1·2는 <b>동작 변화 0</b>. 3은 스위치로 감싸고 폴백이 현행 코드. 최악의 경우에도 <b>오늘의 서비스</b></td></tr>
+    <tr><td>"비용·시간이 늘어난다"</td><td>늘어나는 건 <b>검증에 실패했을 때뿐</b>이고, 그때 늘어나는 게 가치입니다. 예산(150초·10초 하한)은 이미 코드에 있음. 제안 5(라우팅)가 반대쪽에서 호출을 줄임</td></tr>
+    <tr><td>"LangChain 같은 걸 써야 하지 않나"</td><td>아니요. B팀(상위권)가 <b>프레임워크 없이</b> 도구 루프를 짜서 증명했습니다. 도구 3개짜리 루프는 직접 짜는 게 더 작고, <b>"직접 이해하고 만들었다"가 발표·면접에서 더 셉니다</b></td></tr>
+    <tr><td>"되묻기 자율성만으로 ③ 안 되나"</td><td>상위권 팀들 중 4팀이 도구 루프를 가졌습니다. "모델이 질문을 고른다"는 <b>설명</b>이고 trace는 <b>증거</b>입니다 — 심사는 증거를 봅니다</td></tr>
+    <tr><td>"BE 수정이 필요하면?"</td><td>교차검증에서 <code>ask_user</code> 가 <b>Spring 생명주기 변경이 필요하다</b>고 확인돼 <b>범위에서 뺐습니다.</b> 남은 제안은 전부 <b>AI 서비스 안에서 끝나고</b> 응답 계약도 그대로입니다(trace 필드만 추가)</td></tr>
+  </table></div>
+</section>
+
+
+<nav class="pager">
+  <a class="prev" href="agentic-easy.html"><span class="lbl">← 이전</span><span class="ttl">Agentic 쉽게</span></a>
+  <a class="next" href="industry-1025.html"><span class="lbl">다음 →</span><span class="ttl">업계 사례</span></a>
+</nav>
+
+<p class="foot">2026-10-25 · 근거: <code>origin/develop</code> 실측 — <code>star_generator.py</code>(_to_response·_call·StarGenerationLimits) · <code>evidence_checks.py</code> · <code>schemas/analysis.py</code>(StarAnalysisRequest) · <code>api/analysis.py:107</code> · 캠퍼스 전체 비교 · <a href="improve-1025.html">전체 보완 계획</a> · 팀 비교 · 쉬운 판</p>
+</div>
+</body>
+</html>

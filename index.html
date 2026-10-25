@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gitory — 심사 대비 분석 자료</title>
+<link rel="stylesheet" href="claude/tokens.css">
+<link rel="stylesheet" href="claude/style.css">
+<link rel="stylesheet" href="nav.css">
+<style>
+.wrap{display:block;max-width:960px}
+.cards{display:grid;gap:14px;margin:18px 0}
+a.card{display:block;text-decoration:none;color:inherit;border:1px solid var(--color-rule);
+  border-left:5px solid var(--color-ink);border-radius:var(--radius-md);padding:18px 22px;
+  background:var(--color-surface);transition:border-color var(--dur-fast) var(--ease-out)}
+a.card:hover{border-left-color:var(--color-red)}
+a.card .n{font:600 11px var(--font-code);color:var(--color-muted);display:block;margin-bottom:5px}
+a.card strong{display:block;font:700 19px/1.4 var(--font-display);margin-bottom:7px;color:var(--color-ink)}
+a.card small{display:block;color:var(--color-muted);font-size:13.5px;line-height:1.7}
+a.card em{display:block;margin-top:10px;font-style:normal;font-size:12.5px;color:var(--color-blue)}
+a.card.hi{border-left-color:var(--color-red)}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px;margin:18px 0}
+.meta div{border:1px solid var(--color-rule);border-radius:var(--radius-sm);padding:11px 14px;background:var(--color-surface)}
+.meta b{display:block;font-size:11px;color:var(--color-muted);letter-spacing:.05em;margin-bottom:3px}
+.meta span{font:700 17px var(--font-display)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <h1>Gitory — 심사 대비 분석 자료</h1>
+  <p class="context">멘토 심사 100점 기준 현황 진단 · 보완 방향 · AI 에이전트 설계 · 업계 사례 조사</p>
+  <p class="owner">마감 <b>11/11(수) 17:00</b> · 경북대 발표회 <b>11/12(목) 18:00</b></p>
+</header>
+
+<div class="meta">
+  <div><b>현재 추정</b><span>77 / 100</span></div>
+  <div><b>보완 후</b><span>93 / 100</span></div>
+  <div><b>최대 결손</b><span>③ Agentic</span></div>
+  <div><b>남은 기간</b><span>16일</span></div>
+</div>
+
+<h2>읽는 순서</h2>
+
+<div class="cards">
+  <a class="card hi" href="roadmap-1026.html">
+    <span class="n">★ 먼저 이것 · 10/26</span>
+    <strong>회의 결정사항 — 심사 기준 대조</strong>
+    <small>10/25 회의에서 나온 7가지(공고 개편 · 에이전트 일괄처리 · AI 자소서 · 진행 표시 · 에러 점검 · UI 점검)를 <b>배점·제출물 요구사항과 대조</b>. 이미 있는 재료와 남은 일, 16일 실행 순서까지.</small>
+    <em>여기부터 보세요 →</em>
+  </a>
+
+  <a class="card hi" href="rubric-1025.html">
+    <span class="n">01 · 진단</span>
+    <strong>멘토 심사 100점 — 항목별 현황과 보완</strong>
+    <small>배점표 10항목 각각에 <b>지금 어떻게 구현돼 있는지를 파일 증거로</b>, <b>무엇을 보완하면 몇 점 오르는지</b>를 노력과 함께. 강한 항목과 약한 항목이 어디인지.</small>
+    <em>가장 실용적 →</em>
+  </a>
+
+  <a class="card" href="improve-1025.html">
+    <span class="n">02 · 계획</span>
+    <strong>보완 계획 + 제출물 6종 대조</strong>
+    <small>항목별 액션(파일 경로·노력·효과) + 현장심사 40% 대비 + <b>제출물 6종을 "꼭 포함할 내용" 단위로 대조</b> + 날짜별 일정.</small>
+    <em>실행 계획 →</em>
+  </a>
+
+  <a class="card hi" href="agentic-easy.html">
+    <span class="n">03 · AI</span>
+    <strong>Agentic 쉽게 — 왜 점수가 낮고 뭘 하면 되나 <span class="tag t-hi">30점</span></strong>
+    <small>전문 용어 없이 — "에이전트"가 뭔지 비유로, 지금 어디서 막혀 있는지 실제 동작 예시로, 할 일 4단계를 위험도·소요와 함께. 나올 질문 5개 답변까지.</small>
+    <em>AI 담당 아니어도 읽을 수 있습니다 →</em>
+  </a>
+
+  <a class="card" href="agentic-1025.html">
+    <span class="n">04 · AI 설계</span>
+    <strong>AI 에이전트 상세 설계 <span class="tag t-lo">기술</span></strong>
+    <small>LLM 호출 4곳 · 지금 돌아가는 검증 6단계 · 빈 칸 분석 · 도구 3개와 루프 설계 · <b>구현 4단계 PR 분할</b>(1·2단계는 동작 변화 0).</small>
+    <em>AI 담당자용 (파일·함수 단위) →</em>
+  </a>
+
+  <a class="card" href="industry-1025.html">
+    <span class="n">05 · 업계</span>
+    <strong>다른 서비스는 어떻게 하나</strong>
+    <small>Devin · Cursor · Lovable · v0 등 <b>10개 제품</b>이 AI 작업 과정을 어떻게 보여주는지 + 개발자가 뭘 계측하는지. <b>공통 패턴 5가지</b>와 우리 적용점, 작은 팀의 최소 5순위.</small>
+    <em>공식 문서 1차 확인 기준 →</em>
+  </a>
+
+  <a class="card" href="readme-1025.html">
+    <span class="n">06 · README</span>
+    <strong>README 다시 쓰기 — 벤치마크와 초안</strong>
+    <small>잘 쓰인 README 5개 실물 + 공통 골격 6가지 + <b>우리 초안 작성본</b>. 반나절로 심사 ①·⑩과 제출물 4번을 동시에.</small>
+    <em>초안 전문: <a href="README-draft.md">README-draft.md</a> →</em>
+  </a>
+</div>
+
+<div class="note b">
+  <p><b>이 자료에 대해</b></p>
+  <p>· 2026-10-25 운영 서비스(<code>3-37-14-211.sslip.io</code>) 전 기능을 실제로 실행해보고, <code>origin/develop</code> 코드를 대조해 작성했습니다.<br>
+  · 점수는 <b>배점표 기준 추정치</b>입니다 — 실제 채점자가 다르게 볼 수 있습니다.<br>
+  · 다른 팀 조사 결과는 <b>이 공유본에서 제외</b>했습니다.<br>
+  · 분석 과정에서 <b>초기 판단이 틀렸던 부분 5건</b>은 지우지 않고 각 문서에 정정 표기로 남겼습니다.</p>
+</div>
+
+<p class="foot">2026-10-26 · 조사 대상 저장소에는 아무것도 쓰지 않았습니다(읽기 전용) · 운영 <a href="https://3-37-14-211.sslip.io/">https://3-37-14-211.sslip.io</a></p>
+</div>
+</body>
+</html>

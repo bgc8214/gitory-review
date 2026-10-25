@@ -1,0 +1,40 @@
+/* Hallmark · macrostructure: Long Document · tone: editorial technical · anchor hue: ochre */
+/* Hallmark · pre-emit critique: P5 H4 E4 S5 R5 V4 */
+@import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+:root {
+  --color-paper: oklch(97% 0.012 86);
+  --color-surface: oklch(99% 0.006 84);
+  --color-ink: oklch(29% 0.022 67);
+  --color-muted: oklch(49% 0.016 66);
+  --color-rule: oklch(84% 0.016 76);
+  --color-code: oklch(94% 0.012 81);
+  --color-code-dark: oklch(25% 0.019 67);
+  --color-code-ink: oklch(94% 0.009 82);
+  --color-red: oklch(48% 0.12 29);
+  --color-amber: oklch(51% 0.105 73);
+  --color-green: oklch(43% 0.075 142);
+  --color-blue: oklch(44% 0.077 232);
+  --color-plum: oklch(43% 0.08 320);
+  --color-focus: oklch(43% 0.075 142);
+  --font-display: 'Gowun Batang', 'Apple SD Gothic Neo', serif;
+  --font-body: 'IBM Plex Sans KR', 'Apple SD Gothic Neo', sans-serif;
+  --font-code: 'JetBrains Mono', ui-monospace, monospace;
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 24px;
+  --space-2xl: 32px;
+  --space-3xl: 48px;
+  --text-body: 16px;
+  --text-small: 13px;
+  --text-heading: clamp(24px, 3vw, 31px);
+  --rule-thin: 1px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --ease-out: cubic-bezier(.2,.8,.2,1);
+  --ease-in: cubic-bezier(.4,0,1,1);
+  --ease-in-out: cubic-bezier(.4,0,.2,1);
+  --dur-fast: 140ms;
+}

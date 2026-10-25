@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>README 다시 쓰기 — 벤치마크와 초안</title>
+<link rel="stylesheet" href="claude/tokens.css">
+<link rel="stylesheet" href="claude/style.css">
+<link rel="stylesheet" href="nav.css">
+<style>
+.bm{border:1px solid var(--color-rule);border-radius:var(--radius-md);margin:18px 0;overflow:hidden;max-width:82ch}
+.bm>.h{background:var(--color-surface);padding:11px 16px;border-bottom:1px solid var(--color-rule);font-weight:700;font-size:14.5px}
+.bm>.h .s{font:600 11px var(--font-code);color:var(--color-muted);margin-left:8px}
+.bm>.b{padding:4px 16px 12px}
+.bm pre{margin:12px 0}
+.bm .why{font-size:13.5px;color:var(--color-muted);border-left:3px solid var(--color-amber);padding:3px 0 3px 14px;margin:10px 0}
+.bm .why b{color:var(--color-ink)}
+.chk{list-style:none;padding-left:0}
+.chk li{padding-left:26px;position:relative;margin:9px 0}
+.chk li::before{content:"☐";position:absolute;left:0;font-size:15px;color:var(--color-muted)}
+.chk li.on::before{content:"☑";color:var(--color-green)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="docnav">
+  <a class="home" href="index.html">⌂ 전체</a>
+  <span class="sep"></span>
+  <a class="d" href="roadmap-1026.html"><span class="k">★</span>회의 반영</a>
+  <a class="d" href="rubric-1025.html"><span class="k">01</span>심사 100점</a>
+  <a class="d" href="improve-1025.html"><span class="k">02</span>보완 계획</a>
+  <a class="d" href="agentic-easy.html"><span class="k">03</span>Agentic 쉽게</a>
+  <a class="d" href="agentic-1025.html"><span class="k">04</span>Agentic 설계</a>
+  <a class="d" href="industry-1025.html"><span class="k">05</span>업계 사례</a>
+  <a class="d on" href="readme-1025.html"><span class="k">06</span>README</a>
+</nav>
+
+<header class="hero">
+  <h1>README 다시 쓰기</h1>
+  <p class="context">상위팀 README 5개 실물 수집 → 공통 골격 추출 → <b>우리 초안 작성</b> · 심사 ①·⑩ + 제출물 4가 여기 걸림</p>
+  <p>지금 우리 첫 화면은 <code># ktc4-team-05</code> 와 날짜별 작업 기록입니다. 심사자가 제일 먼저 여는 페이지예요.</p>
+  <p class="owner">초안 전문은 <a href="README-draft.md">README-draft.md</a> · 🧭 쉬운 판 · <a href="improve-1025.html">보완 계획</a></p>
+</header>
+
+<nav class="toc">
+  <b>목차</b>
+  <a href="#s0">0. 지금 우리 README</a>
+  <a href="#s1">1. 상위팀 실물 5개</a>
+  <a href="#s1a" class="sub">C팀 — 가장 따라하기 좋음</a>
+  <a href="#s1b" class="sub">E팀 — 같은 권역</a>
+  <a href="#s1c" class="sub">I팀 — 가장 정교함</a>
+  <a href="#s1d" class="sub">A팀 — 허브형</a>
+  <a href="#s1e" class="sub">B팀 — 반면교사</a>
+  <a href="#s2">2. 공통 골격</a>
+  <a href="#s3">3. 우리 초안</a>
+  <a href="#s4">4. 체크리스트</a>
+</nav>
+
+<section id="s0">
+  <h2>0. 지금 우리 README — 무엇이 문제인가</h2>
+  <pre># ktc4-team-05
+
+2026-10-20 모바일 공통 푸터의 하단 가림, 좁은 버튼 배치와 PC/모바일 기능 점검은
+[공통 푸터 작업 기록](frontend/docs/2026-10-20-MOBILE_FOOTER.md)에 정리했습니다.
+
+2026-10-20 #326 초안 진행률·#327 카드 연속 검토와 PC/모바일 화면 캡처, …
+
+<span class="c">(날짜별 작업 기록이 계속 이어짐)</span></pre>
+  <div class="tblw"><table>
+    <tr><th>문제</th><th>심사에서</th></tr>
+    <tr class="bad"><td>제목이 <code>ktc4-team-05</code> — <b>서비스 이름이 없다</b> (게다가 경북 1팀인데 team-05)</td><td>① "문제·타겟·시나리오가 분명한가"에서 첫인상 0</td></tr>
+    <tr class="bad"><td>뭘 만드는 서비스인지 <b>한 줄도 없다</b></td><td>심사자가 코드를 뒤져야 함</td></tr>
+    <tr class="bad"><td>실행 방법·배포 주소가 없다</td><td>⑩ + <b>제출물 4가 "README(실행·배포 방법 포함)"를 요구</b></td></tr>
+    <tr class="warn"><td>프론트 작업 기록만 날짜 역순으로 — BE·AI 작업은 안 보임</td><td>팀 전체 산출물이 축소돼 보임</td></tr>
+  </table></div>
+  <div class="note"><p><b>역설적인 건</b> — 내용은 이미 <code>docs/</code>에 다 있습니다. ARCHITECTURE·BE_AI_INTEGRATION·DEPLOYMENT·GUARDRAILS·evals까지. <b>앞으로 끌어오기만</b> 하면 됩니다.</p></div>
+</section>
+
+<section id="s1">
+  <h2>1. 상위팀 README 실물</h2>
+  <p class="kicker">5개 팀의 README·기획문서를 그대로 읽어왔습니다. 인용은 원문입니다.</p>
+
+  <h3 id="s1a">C팀 (상위권) — 가장 따라하기 좋은 모델 <span class="tag t-hi">추천</span></h3>
+  <div class="bm">
+    <div class="h">쌤플 · Ssample<span class="s">README.md 전문 1,528자</span></div>
+    <div class="b">
+<pre># 쌤플 · Ssample
+
+어린이집 교사의 보육 문서 초안을 만드는 AI. 만 3~5세 유아반 담임교사 대상.
+
+카카오테크 캠퍼스 4기 2단계 팀 프로젝트 — 강원대 2팀
+
+## 실행
+
+sh scripts/local-cert.sh --i-am-not-the-server   # 처음 한 번만
+docker compose up -d --build
+curl -f http://localhost/health                  # {"status":"ok"}
+
+<span class="hi">브라우저는 http://localhost 로 연다 (3000 아님).</span> nginx 를 거쳐야 /api 가
+FastAPI 로 간다 — 3000 으로 바로 열면 로그인부터 안 된다.
+
+<span class="hi">서버에서는 돌리지 않는다 — 진짜 인증서를 덮어쓴다.</span>
+
+## 문서
+CLAUDE.md 부터 읽는다 — 어기면 사고 나는 규칙이고, 맨 위에 문서 전체 색인이 있다.
+
+<span class="c">색인을 여기에도 두지 않는다. 두 군데 적으면 한쪽만 고쳐진다 —
+실제로 여기 있던 표가 docs/ 의 문서 절반을 빠뜨린 채로 있었다.</span>
+
+## 스택
+Frontend   Next.js (TypeScript, App Router)
+Backend    FastAPI (Python 3.12)
+Database   PostgreSQL 15
+Infra      AWS EC2 · Docker · GitHub Actions
+AI         엘리스 MLAPI</pre>
+      <p class="why"><b>배울 점 ①</b> 첫 두 줄에 <b>제품·사용자·범위</b>가 다 있다. 제목이 레포명이 아니라 <b>서비스명</b>.</p>
+      <p class="why"><b>배울 점 ②</b> 실행 블록에 <b>틀리기 쉬운 지점</b>을 적었다 — "3000 아님", "서버에서는 돌리지 않는다". 명령만 던지는 README와 다르다.</p>
+      <p class="why"><b>배울 점 ③</b> <b>중복을 안 하는 이유를 적었다</b> — "두 군데 적으면 한쪽만 고쳐진다. 실제로 여기 있던 표가 문서 절반을 빠뜨린 채로 있었다." 규칙에 사고 사례가 붙어 있다.</p>
+    </div>
+  </div>
+
+  <h3 id="s1b">E팀 (상위권) — 같은 권역, 같은 발표회장</h3>
+  <div class="bm">
+    <div class="h">goodradar<span class="s">README.md 7,043자 · 발췌</span></div>
+    <div class="b">
+<pre># ktc4-kyungpook-6
+
+카카오테크 캠퍼스 4기 2단계 팀 프로젝트 — 경북대 6팀
+
+<span class="hi">결식아동 급식카드 가맹점의 정보가 낡는 문제를 다룹니다. 공개 정보로 가게 상태 변화를
+찾아 담당자에게 수정안을 제안하고, 점주가 아동의 방문을 QR 로 확인합니다.</span>
+
+## 저장소 구조
+
+backend/    Spring Boot · Java 21     가게·조사·인증·QR 체크인 API
+ai/         FastAPI · Python          가게 정보 2차 조사 (웹검색·카카오맵·국세청)
+frontend/   React · Vite              관리자 웹 (가게 목록, 조사 결과 검토)
+app/        Capacitor · React         점주용 앱 (QR 스캔) <span class="bad">— 아직 껍데기</span>
+
+## 실행과 테스트
+각 파트는 자기 폴더에서 돌립니다. CI(test.yml)도 같은 스크립트를 씁니다.
+
+<span class="bad">⚠️ 지도 대조 스위치를 켜기 전에 ai/src/investigation/classify.py:84 를 고쳐야 합니다 —
+"대구왕갈비본점" → "왕갈비본점" 으로 잘려서 같은 구 안의 다른 가게 정보를 끌어옵니다.</span></pre>
+      <p class="why"><b>배울 점 ①</b> 세 번째 문단 <b>2문장</b>으로 문제 → 해법 → 사용자 행동을 끝냈다.</p>
+      <p class="why"><b>배울 점 ②</b> 구조 블록이 <b>경로 / 기술 / 그 폴더가 하는 일</b> 3열. 미완성도 솔직히("아직 껍데기").</p>
+      <p class="why"><b>배울 점 ③</b> <b>알려진 버그를 파일:줄번호로</b> README에 박았다. 환경변수 표에는 "없으면 어떻게 되나" 열이 따로 있다.</p>
+    </div>
+  </div>
+
+  <h3 id="s1c">I팀 (중위권) — 가장 정교한 범위 선언</h3>
+  <div class="bm">
+    <div class="h">대신고 (Daesingo)<span class="s">README.md 15,147자 · 발췌</span></div>
+    <div class="b">
+<pre># 대신고 (Daesingo)
+
+<span class="hi">블랙박스 영상에서 교통위반 신고 자료를 준비해 주는 제품.</span>
+
+위험한 위반을 목격했고 신고할 마음도 생겼지만, 운전 중이라 정확한 시각과 장소를
+적어두지 못한 운전자가 타깃이다. (…) <span class="hi">사용자는 확인하고 고치기만 한다.</span>
+
+목표는 신고할 마음이 없던 사람을 유도하는 게 아니라, 이미 생긴 신고 의향이
+준비 과정의 마찰 때문에 사라지지 않게 하는 것이다.
+
+<span class="c">> 현재 Runtime 상태 (2026-10-18 갱신): api는 RT-08(a)의 app factory·HTTP envelope·
+> health를 구현했다. 실제 Search adapter 연결은 후속 작업이다.</span>
+
+## 무엇을 하고, 무엇을 하지 않는가
+
+<span class="ok">한다</span> — 자연어 기억 단서를 시간·차량 정보로 구조화 · 1차 탐색 후 정밀 검증 ·
+         시각을 출처와 함께 관리 · 신고요건 점검과 안전신문고 handoff
+
+<span class="bad">하지 않는다</span> — AI가 법적 위반 여부를 최종 확정 · 사용자 승인 없는 무인 자동신고 ·
+              신뢰 가능한 출처 없는 시각을 임의 생성 · 자체 지도 UI
+
+### 초기 지원 사건 4종
+신호위반 · 중앙선 침범 · 진로변경 · 이륜차 안전모 미착용
+<span class="hi">4종으로 좁힌 이유는 서로 다른 인식 능력을 함께 검증할 수 있기 때문이다.</span>
+
+## 문서를 읽는 순서
+<span class="hi">전체를 읽지 않는다.</span> 자기 작업에 해당하는 것만 연다.
+<span class="c">미결은 미결로 남긴다. 문서를 완성도 있게 보이려고 채우지 않는다.</span></pre>
+      <p class="why"><b>배울 점 ①</b> <b>"한다 / 하지 않는다"</b>를 나란히. 범위를 <b>음수로도</b> 선언한다.</p>
+      <p class="why"><b>배울 점 ②</b> <b>범위를 좁힌 이유</b>를 적었다 — 역량 부족이 아니라 설계 판단으로 읽힌다.</p>
+      <p class="why"><b>배울 점 ③</b> "현재 Runtime 상태(날짜)" 박스 + "미결은 미결로 남긴다". <b>진행률을 숨기지 않는다.</b></p>
+    </div>
+  </div>
+
+  <h3 id="s1d">A팀 (최상위) — 허브형</h3>
+  <div class="bm">
+    <div class="h">아이캐치<span class="s">README.md + PRODUCT.md · 발췌</span></div>
+    <div class="b">
+<pre><span class="c">README.md</span>
+## 아이캐치
+> <span class="hi">육아를 가장 많이 아는 AI가 아니라, 우리 아이를 가장 오래 알아온 AI.</span>
+
+🧭 프로젝트 컨텍스트 → CLAUDE.md — 무엇을 만드는가 · 절대 규칙 · 용어 · 협업 규칙.
+   작업 시작 전에 읽으세요.
+
+| 서비스 기획 최종안 | <span class="hi">문제 정의 · 동작 방식 · 안전 설계 · 성공 지표</span> |
+| 테크스펙         | 요구사항 · 아키텍처 · 데이터 모델 · API 명세 · 리스크 |
+| Agent 처리 흐름도 | 인식 → 승인 → 계획 → 행동 → 결과 → 반영 |
+
+<span class="c">PRODUCT.md</span>
+## Users
+<span class="hi">1순위 — 1차 배포 실사용 학부모.</span> 부산대 부설어린이집 학부모 단톡방이 유일한 채널이다.
+앞으로의 모든 설계 결정은 이 사람들의 사용 조건을 기준으로 한다.
+<span class="bad">멘토·심사 데모는 1순위가 아니다.</span>
+
+| 근거 없는 개인화 추천 건수 | <span class="hi">0건 (하드 기준)</span> |
+| 블라인드 비교 선택률      | <span class="c">미정 (열린 결정)</span> |
+
+<span class="bad">목표가 아닌 것</span> — 부모가 육아에 덜 참여하게 만드는 것.</pre>
+      <p class="why"><b>배울 점 ①</b> 한 문장이 <b>대조 구조</b> — "A가 아니라 B". 경쟁 제품과의 차이가 한 줄에.</p>
+      <p class="why"><b>배울 점 ②</b> 문서 표의 오른쪽이 제목 반복이 아니라 <b>내용 목차</b>. 열기 전에 열지 말지 판단된다.</p>
+      <p class="why"><b>배울 점 ③</b> 지표에 <b>하드 기준과 미정을 같이</b> 적었다. 안 정한 걸 숨기지 않는다.</p>
+    </div>
+  </div>
+
+  <h3 id="s1e">B팀 (상위권) — 반면교사 <span class="tag t-md">주의</span></h3>
+  <div class="bm">
+    <div class="h">Really<span class="s">README.md 전문 — 12줄</span></div>
+    <div class="b">
+<pre># ktc4-team-14
+카카오테크 캠퍼스 4기 2단계 팀 프로젝트 — 부산대 4팀
+
+## 프로젝트 구조
+- backend/: Java 21 + Spring Boot 백엔드
+- compose.yaml: 로컬 개발용 PostgreSQL
+
+백엔드 개발 환경과 실행 방법은 backend/README.md 를 참고하세요.</pre>
+      <p class="why"><b>이 팀은 19점인데 README는 약합니다.</b> 제품 설명이 <b>한 줄도 없고</b> 전부 103KB짜리 CONTEXT.md에 있습니다. 심사자가 첫 화면에서 "이게 뭘 만드는 레포지?"를 모릅니다.</p>
+      <p class="why"><b>교훈</b> — <b>좋은 내부 문서가 있어도 README가 비면 손해를 봅니다.</b> 우리가 지금 딱 이 상태인데, 우리는 CONTEXT.md 같은 대체물도 없습니다.</p>
+    </div>
+  </div>
+</section>
+
+<section id="s2">
+  <h2>2. 공통 골격 — 5팀에서 뽑은 것</h2>
+
+  <h3>첫 화면(스크롤 전)에 들어간 것</h3>
+  <pre>서비스명 (레포명 아님 · 한글+영문 병기)
+   ↓
+<span class="hi">굵은 한 줄 정의</span> — "무엇을 하는 제품인가"
+   ↓
+<span class="hi">타겟 + 문제 상황</span> — 누가, 어떤 순간에 막히는가 (1~2문장)
+   ↓
+소속 1줄
+   ↓
+다음에 읽을 문서 1개 (진입점 지정)</pre>
+  <p class="kicker">배지·스크린샷·기여자 테이블·목차는 <b>5팀 중 아무도 첫 화면에 쓰지 않았습니다.</b></p>
+
+  <h3>상위팀에만 있고 보통 README엔 없는 것 6가지</h3>
+  <div class="tblw"><table>
+    <tr><th></th><th>무엇</th><th>누가</th></tr>
+    <tr><td>1</td><td><b>"하지 않는다" 목록</b> — 범위를 음수로 선언</td><td><b>5팀 중 4팀</b> (I팀 "한다/하지 않는다", C팀 "스펙아웃", A팀 "목표가 아닌 것", B팀 "세무사를 대체하지 않는다")</td></tr>
+    <tr><td>2</td><td><b>문서 소유권·중복 금지 선언</b> — "이 내용은 X가 소유한다", 충돌 시 우선순위</td><td>C팀 · I팀</td></tr>
+    <tr><td>3</td><td><b>미완성의 정직한 표기</b> — "아직 껍데기", "현재 상태(날짜)", 알려진 버그를 파일:줄로</td><td>E팀 · I팀</td></tr>
+    <tr><td>4</td><td><b>"없으면 어떻게 되나" 열</b>이 붙은 환경변수 표</td><td>E팀</td></tr>
+    <tr><td>5</td><td><b>왜 그렇게 정했는지</b> — 범위를 좁힌 이유, 반려한 대안, ADR 번호</td><td>I팀 · C팀 · B팀</td></tr>
+    <tr><td>6</td><td><b>읽는 순서 지정</b> — "전체를 읽지 않는다. 자기 작업 것만"</td><td>I팀 · A팀</td></tr>
+  </table></div>
+  <div class="note g"><p><b>우리에게 유리한 점</b> — 이 6가지 중 <b>1·3·4·5는 우리가 재료를 이미 갖고 있습니다.</b> "하지 않는다"(읽기 전용·근거 없으면 안 씀·확정은 사람이), 미완성(매칭 등급 정리 중), 스위치 표(LLM 없으면 그룹화 건너뜀), 왜 그렇게(PR 토론 221개). <b>쓰기만 하면 됩니다.</b></p></div>
+</section>
+
+<section id="s3">
+  <h2>3. 우리 초안 — 써봤습니다</h2>
+  <p>위 골격으로 작성했습니다. <b>전문은 <a href="README-draft.md">README-draft.md</a></b> — 그대로 쓰셔도 되고 고쳐 쓰셔도 됩니다.</p>
+
+  <h3>첫 화면 (이 부분이 제일 중요)</h3>
+<pre># Gitory
+
+<span class="hi">깃허브 커밋 기록을 자소서에 쓸 수 있는 경험 카드로 바꿔 주는 서비스.</span>
+
+이력서를 쓰려고 앉으면 "뭘 했는지"가 기억나지 않는 사람이 타깃이다. 커밋·PR은 수백 개
+쌓여 있는데 막상 자소서 칸 앞에서는 빈 화면이 된다. 저장소를 고르면 Gitory가 커밋을
+경험 단위로 묶고, STAR 네 칸의 초안을 <span class="hi">근거 커밋을 달아서</span> 써 준다. 비어 있는 칸은
+AI가 되묻고, 사용자가 답하면 채워진다.
+
+<span class="hi">지어낸 경험이 아니라 증명 가능한 경험</span>이 목표다. 모든 문장에는 그 문장의 근거가 된
+커밋 SHA가 붙고, 클릭하면 실제 GitHub 커밋으로 간다. 근거가 없는 문장은 화면에 내보내지 않는다.
+
+카카오테크 캠퍼스 4기 2단계 팀 프로젝트 — 경북대 1팀
+
+| 써 보기        | https://3-37-14-211.sslip.io · GitHub 로그인 (읽기 권한만) |
+| 처음 작업한다면 | docs/COLLABORATION.md |
+| 문서를 찾는다면 | 아래 문서 지도 |</pre>
+
+  <h3>그 다음에 넣은 것</h3>
+  <div class="tblw"><table>
+    <tr><th>섹션</th><th>왜 넣었나</th></tr>
+    <tr><td><b>무엇을 하고, 무엇을 하지 않는가</b></td><td>상위 4팀의 공통 무기. 우리 "하지 않는다"가 특히 셈 — <b>저장소에 쓰지 않는다 · 근거 없는 문장을 쓰지 않는다 · 확정은 사람이 · 없는 경험을 만들어 주지 않는다</b></td></tr>
+    <tr><td><b>핵심 흐름 7단계</b></td><td>심사 ①의 "핵심 시나리오"가 그림 하나로. 발표 자료 한 장이 여기서 나옴</td></tr>
+    <tr><td><b>저장소 구조</b> (경로/기술/역할 3열)</td><td>E팀 방식. "AI는 상태를 갖지 않는다"는 설계 원칙을 한 줄로 — 심사 ⑤ 어필</td></tr>
+    <tr><td><b>실행</b> + 틀리기 쉬운 지점</td><td>C팀 방식. "localhost로 열어라(5173 아님)", "LLM 없으면 그룹화 건너뜀 — 에러 아니라 설계"</td></tr>
+    <tr><td><b>기능 스위치 표</b></td><td>E팀의 "없으면 어떻게 되나" 열 차용. <b>머지와 켜기를 분리한다</b>는 우리 강점이 여기서 보임</td></tr>
+    <tr><td><b>테스트 표</b> (종류/위치/CI)</td><td>⑧ 증거. <b>단, E2E 범위를 정직하게 구분</b> — 목 E2E와 스택 E2E(GitHub·LLM은 가짜)를 나눠 적음</td></tr>
+    <tr><td><b>문서 지도</b></td><td>A팀 방식. 오른쪽에 "안에 뭐가 있나"</td></tr>
+    <tr><td><b>지금 상태</b> (날짜)</td><td>I팀 방식. 매칭 등급 기준 정리 중 같은 걸 숨기지 않음</td></tr>
+  </table></div>
+
+  <div class="note"><p><b>초안에서 비워둔 곳</b> — ⓐ "지금 상태" 날짜 ⓑ 테스트 계정 안내(심사자가 bgc8214 없이 써볼 길) ⓒ <code>docs/COLLABORATION.md</code>·<code>PRODUCT.md</code>·<code>docs/CHANGELOG.md</code> 는 <b>아직 없는 파일</b>입니다. 같이 만들거나 링크를 빼세요.</p></div>
+</section>
+
+<section id="s4">
+  <h2>4. 적용 체크리스트</h2>
+  <ul class="chk">
+    <li>제목을 <code># Gitory</code> 로 — <b>서비스명</b>. <code>ktc4-team-05</code> 는 틀린 번호이기도 함</li>
+    <li>굵은 한 줄 정의 + 타겟 2~3문장을 맨 위에</li>
+    <li>배포 주소를 <b>첫 화면에</b> — 심사자가 바로 눌러볼 수 있게</li>
+    <li><b>테스트 계정·샘플 저장소</b> 안내 (제출물 1번 요구사항)</li>
+    <li>"하지 않는다" 목록 — 우리 가드레일이 자산으로 읽힘</li>
+    <li>기존 날짜별 작업 기록은 <code>docs/CHANGELOG.md</code> 로 이동 (지우지 말 것)</li>
+    <li>실행 방법 + 틀리기 쉬운 지점 (LLM 설정 없을 때 동작 포함)</li>
+    <li>문서 지도 — 오른쪽 칸에 "안에 뭐가 있나"</li>
+    <li>"지금 상태" 블록에 날짜와 미완성 항목</li>
+    <li class="on">내용 재료는 전부 <code>docs/</code> 에 있음 — 새로 조사할 것 없음</li>
+  </ul>
+  <div class="note b"><p><b>예상 소요 반나절.</b> 심사 ①(10점)·⑩(5점)과 제출물 4번이 동시에 해결되고, <b>발표 자료 1~3장의 대본</b>이 덤으로 나옵니다. 코드 작업 중 가장 싼 점수입니다.</p></div>
+</section>
+
+
+<nav class="pager">
+  <a class="prev one" href="industry-1025.html"><span class="lbl">← 이전</span><span class="ttl">업계 사례</span></a>
+</nav>
+
+<p class="foot">2026-10-25 · 벤치마크 출처: <code>kakaotechcampus-4</code> 5개 레포 읽기 전용 조회(A팀 PRODUCT.md·service-plan.md, B팀 CONTEXT.md, C팀 README·PRD.md, E팀 README, I팀 README) · 초안 <a href="README-draft.md">README-draft.md</a> · <a href="improve-1025.html">보완 계획</a> · 팀 비교</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>멘토 심사 100점 — 항목별 현황과 보완</title>
+<link rel="stylesheet" href="claude/tokens.css">
+<link rel="stylesheet" href="claude/style.css">
+<link rel="stylesheet" href="nav.css">
+<style>
+.item{border:1px solid var(--color-rule);border-radius:var(--radius-md);margin:22px 0;overflow:hidden}
+.item>.hd{display:flex;align-items:baseline;gap:12px;padding:13px 18px;background:var(--color-surface);border-bottom:1px solid var(--color-rule);flex-wrap:wrap}
+.item>.hd .no{font:700 20px var(--font-display)}
+.item>.hd .nm{font:700 16px var(--font-display);flex:1}
+.item>.hd .sc{font:700 15px var(--font-code)}
+.item>.bd{padding:6px 18px 16px}
+.item .crit{font-size:13.5px;color:var(--color-muted);font-style:italic;border-left:3px solid var(--color-rule);padding-left:13px;margin:12px 0}
+.g-hi{border-left:6px solid var(--color-red)}
+.g-md{border-left:6px solid var(--color-amber)}
+.g-lo{border-left:6px solid var(--color-green)}
+.now{background:oklch(96% 0.012 84);border-radius:var(--radius-sm);padding:11px 15px;margin:12px 0}
+.now b.t{display:block;font-size:12px;letter-spacing:.04em;color:var(--color-muted);margin-bottom:6px}
+.fix{border:1px solid var(--color-rule);border-left:4px solid var(--color-ink);border-radius:var(--radius-sm);padding:12px 16px;margin:11px 0;background:var(--color-paper)}
+.fix .h{font-weight:700;font-size:14.5px;margin-bottom:6px}
+.fix .cost{font:600 11px var(--font-code);color:var(--color-muted);float:right}
+.fix p{margin:6px 0;font-size:14px}
+.gain{display:inline-block;font:700 11px var(--font-body);background:oklch(90% 0.07 142);color:oklch(32% 0.08 142);padding:2px 9px;border-radius:999px;margin-left:6px}
+.bar{display:flex;height:22px;border-radius:4px;overflow:hidden;margin:16px 0;font:600 11px var(--font-body);max-width:78ch}
+.bar i{display:flex;align-items:center;justify-content:center;font-style:normal;color:#fff}
+.b1{background:oklch(43% 0.075 142)}.b2{background:oklch(51% 0.105 73)}.b3{background:oklch(48% 0.12 29)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="docnav">
+  <a class="home" href="index.html">⌂ 전체</a>
+  <span class="sep"></span>
+  <a class="d" href="roadmap-1026.html"><span class="k">★</span>회의 반영</a>
+  <a class="d on" href="rubric-1025.html"><span class="k">01</span>심사 100점</a>
+  <a class="d" href="improve-1025.html"><span class="k">02</span>보완 계획</a>
+  <a class="d" href="agentic-easy.html"><span class="k">03</span>Agentic 쉽게</a>
+  <a class="d" href="agentic-1025.html"><span class="k">04</span>Agentic 설계</a>
+  <a class="d" href="industry-1025.html"><span class="k">05</span>업계 사례</a>
+  <a class="d" href="readme-1025.html"><span class="k">06</span>README</a>
+</nav>
+
+<header class="hero">
+  <h1>멘토 심사 100점 — 항목별 현황과 보완</h1>
+  <p class="context">배점표 10항목 기준 · 우리 구현 상태를 <b>파일 단위 증거</b>로 · 보완안은 <b>노력 대비 점수</b> 순</p>
+  <p>현재 추정 <b>77점</b> → 보완 후 <b>93점</b>. 올라갈 여지가 가장 큰 세 곳은 <b>③ Agentic(+4) · ① 명확성(+3) · ⑩ 문서협업(+2)</b>입니다.</p>
+  <p class="owner">근거: 10/25 운영 실측 + <code>origin/develop</code> 코드 대조 + 캠퍼스 전체 비교 + 교차검증 1회</p>
+</header>
+
+<nav class="toc">
+  <b>목차</b>
+  <a href="#s0">한눈에 — 점수 지도</a>
+  <a href="#s1">① 문제·타겟·시나리오 10</a>
+  <a href="#s2">② 완성도·안정성 10</a>
+  <a href="#s3">③ Agentic 경험 10</a>
+  <a href="#s4">④ 개발 충실성 15</a>
+  <a href="#s5">⑤ Agentic 설계 15</a>
+  <a href="#s6">⑥ AI 품질 점검 5</a>
+  <a href="#s7">⑦ 가드레일 10</a>
+  <a href="#s8">⑧ 코드 품질·테스트 10</a>
+  <a href="#s9">⑨ 배포·운영 10</a>
+  <a href="#s10">⑩ 문서·개발문화 5</a>
+  <a href="#s11">실행 순서</a>
+</nav>
+
+<section id="s0">
+  <h2>한눈에 — 점수 지도</h2>
+  <div class="bar">
+    <i class="b1" style="flex:77">확보 추정 77</i>
+    <i class="b2" style="flex:16">보완 가능 16</i>
+    <i class="b3" style="flex:7">남는 7</i>
+  </div>
+  <div class="tblw"><table>
+    <tr><th>항목</th><th>배점</th><th>현재</th><th>보완 후</th><th>무엇이 가른가</th></tr>
+    <tr class="warn"><td>① 문제·타겟·시나리오</td><td>10</td><td><b>6</b></td><td>9</td><td>제품은 일관된데 <b>"왜 만드나"를 적은 글이 없음</b></td></tr>
+    <tr class="good"><td>② 완성도·안정성</td><td>10</td><td><b>9</b></td><td>10</td><td>실측 무결점 · 테스트 계정만 없음</td></tr>
+    <tr class="bad"><td>③ Agentic 경험</td><td>10</td><td><b>4</b></td><td>8</td><td><b>도구 루프 없음</b> — 최대 격차</td></tr>
+    <tr class="good"><td>④ 개발 충실성</td><td>15</td><td><b>13</b></td><td>14</td><td>A·B 경로 + 매칭까지 완결</td></tr>
+    <tr class="good"><td>⑤ Agentic 설계</td><td>15</td><td><b>13</b></td><td>14</td><td>상태·분기·예외는 최상, <b>도구 연동만 빈칸</b></td></tr>
+    <tr class="warn"><td>⑥ AI 품질 점검</td><td>5</td><td><b>4</b></td><td>5</td><td>자산 풍부, <b>집계 한 장</b>이 없음</td></tr>
+    <tr class="good"><td>⑦ 가드레일</td><td>10</td><td><b>8</b></td><td>9</td><td>주입 시험까지 있음 · <b>문서가 낡음</b></td></tr>
+    <tr class="good"><td>⑧ 코드 품질·테스트</td><td>10</td><td><b>8</b></td><td>9</td><td>풍부하나 <b>E2E가 필수 체크 아님</b></td></tr>
+    <tr class="good"><td>⑨ 배포·운영</td><td>10</td><td><b>9</b></td><td>9</td><td>CI 게이트까지 — 거의 만점</td></tr>
+    <tr class="warn"><td>⑩ 문서·개발문화</td><td>5</td><td><b>3</b></td><td>5</td><td>리뷰·파트README·API문서는 강함 · <b>루트 허브·그라운드룰·backend README 없음</b></td></tr>
+    <tr><td><b>합계</b></td><td><b>100</b></td><td><b>77</b></td><td><b>93</b></td><td></td></tr>
+  </table></div>
+  <div class="note b"><p><b>구조적으로 읽으면</b> — 코드로 만든 것(④⑤⑦⑧⑨ = 60점)은 <b>55점을 이미 확보</b>했습니다. 깎이는 23점 중 <b>13점이 ①③⑩</b>에 몰려 있고, 그중 <b>①⑩(7점)은 글쓰기</b>, <b>③(6점)은 코드 한 덩어리</b>입니다.</p></div>
+</section>
+
+<section id="s1">
+  <div class="item g-hi">
+    <div class="hd"><span class="no">①</span><span class="nm">문제·타겟·핵심 시나리오 명확성</span><span class="sc">6 / 10</span></div>
+    <div class="bd">
+      <p class="crit">"문제·타겟·핵심 시나리오가 분명하고, 이를 푸는 핵심 기능 구성까지 일관되게 연결되어 설득력 있는가"</p>
+
+      <div class="now"><b class="t">지금 우리</b>
+      <p><b>제품 자체는 일관성이 매우 높습니다.</b> 오늘 실측에서 레포 선택 → 분석 → 후보 79개 → AI 카드(근거 SHA) → 되묻기 → 확정 → 공고 매칭까지 <b>하나의 이야기로 이어집니다.</b> "커밋은 쌓였는데 자소서 칸이 빈다"는 문제에 기능 구성이 정확히 대응합니다.</p>
+      <p><b>그런데 그 이야기가 글로 어디에도 없습니다.</b> 루트 <code>README.md</code> 는 제목이 <code># ktc4-team-05</code>(경북 1팀인데 team-05)이고 본문은 날짜별 프론트 작업 기록 나열입니다. <b>파트별 README(frontend 23KB·ai 14KB)는 충실하지만</b> 전부 "어떻게 만들었나"이지 <b>"왜 만드나·누구를 위해"가 아닙니다.</b> 기획·페르소나 문서도 없습니다.</p></div>
+
+      <p><b>심사자가 겪는 것</b> — 레포를 열면 "이게 뭘 만드는 프로젝트인지" 첫 화면에서 알 수 없습니다. 캠퍼스 전체 중 상위권 팀들은 전부 <b>첫 두세 줄에 제품·사용자·범위</b>가 있습니다.</p>
+
+      <div class="fix"><span class="cost">반나절 · 1명</span><div class="h">보완 1. README 전면 교체 <span class="gain">+2</span></div>
+        <p>제목을 <b>Gitory</b>로. 굵은 한 줄 정의 → 타겟 2~3문장 → 배포 주소 → "한다/하지 않는다" → 핵심 흐름 7단계 → 실행법 → 문서 지도. <b>초안을 이미 써뒀습니다</b> → <a href="README-draft.md">README-draft.md</a>, 벤치마크 분석은 <a href="readme-1025.html">readme-1025</a>.</p>
+        <p class="kicker">내용은 전부 <code>docs/</code>에 있습니다 — 새로 조사할 게 없고 <b>앞으로 끌어오는 작업</b>입니다.</p>
+      </div>
+
+      <div class="fix"><span class="cost">반나절 · PM</span><div class="h">보완 2. PRODUCT.md 신설 <span class="gain">+1</span></div>
+        <p>A팀·B팀 벤치마크: 페르소나 한 명으로 고정 · 문제 한 문장 · 성공 지표 3개 · <b>버린 대안과 이유</b>(매칭을 미뤘다가 직무조건 기준으로 넣은 결정 등 — PR 토론 221개에 재료가 있습니다).</p>
+        <p class="kicker">덤: <b>현장심사 ①(20점)의 발표 1~3장 대본</b>이 그대로 나옵니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="s2">
+  <div class="item g-lo">
+    <div class="hd"><span class="no">②</span><span class="nm">완성도·안정성·사용성</span><span class="sc">9 / 10</span></div>
+    <div class="bd">
+      <p class="crit">"오류·끊김 없이 안정적으로 동작하고, 화면 흐름·속도·편의까지 다듬어져 완성도 있게 쓸 수 있는가"</p>
+
+      <div class="now"><b class="t">지금 우리 — 가장 강한 항목 중 하나</b>
+      <p>10/25 운영에서 <b>전 구간을 사용자로 완주했고 깨진 흐름 0건, 콘솔 에러 0건</b>입니다. 편의 요소도 실제로 확인됐습니다 — 읽는 범위 사전 동의(READ ONLY 배지), 분석 4단계 진행 표시, <b>URL에 job id가 있어 새로고침해도 이어짐</b>, 취소 버튼, 자동 저장, "빈 채로 확정됩니다" 경고, 확정 전 요약 모달.</p>
+      <p>6주차에 막혔던 <code>#154</code>(수집 전체 실패)는 <b>가드레일 방식으로 해결</b>됐습니다 — 잘못된 값만 버리고 수집은 계속.</p></div>
+
+      <div class="fix"><span class="cost">1시간</span><div class="h">보완 1. 테스트 계정·샘플 저장소 안내 <span class="gain">+1</span></div>
+        <p><b>제출물 1번이 요구하는 항목입니다</b> — "로그인이 필요하면 테스트 계정과 샘플 데이터를 함께 적어주세요". 지금은 심사자가 자기 GitHub으로 로그인해야 하고, <b>커밋이 적은 계정이면 후보가 거의 안 나옵니다.</b></p>
+        <p>GitHub 테스트 계정 1개 + "이 저장소로 해보세요" 추천 1~2개를 README와 제출 폼에 적으면 됩니다.</p>
+      </div>
+
+      <div class="fix"><span class="cost">반나절 · 선택</span><div class="h">보완 2. 발표회 동시 접속 대비</div>
+        <p>분석 중 폴링이 <code>/api/jobs?active</code> + <code>/api/jobs/{id}</code> <b>2개를 1~2초 간격</b>으로 돕니다. 발표회장에서 여러 명이 동시에 쓰면 부담이 됩니다. 주기를 늘리거나(3~5초) 두 호출을 합치는 것 중 하나.</p>
+        <p class="kicker">당장 점수 손해는 없지만 <b>발표 당일 사고 예방</b>입니다. Q&A "동시 접속 견디나요?"의 답이기도 하고요.</p>
+      </div>
+
+      <div class="fix"><span class="cost">10분</span><div class="h">보완 3. 기능 동결 선언</div>
+        <p><b>11/1부터 새 기능 금지.</b> ②에서 가장 큰 위험은 "발표 직전에 넣은 기능이 깨지는 것"입니다. 지금 완성도가 높으니 지키는 게 이득입니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="s3">
+  <div class="item g-hi">
+    <div class="hd"><span class="no">③</span><span class="nm">Agentic 경험</span><span class="sc">4 / 10 — 최대 격차</span></div>
+    <div class="bd">
+      <p class="crit">"여러 도구와 단계를 스스로 엮어, <b>사람이 끼어들지 않아도</b> 핵심 시나리오를 끝까지 풀어내는가"</p>
+
+      <div class="now"><b class="t">지금 우리</b>
+      <p>LLM을 네 군데서 부릅니다 — 경험 그룹화 · diff 요약 · STAR 초안 · 되묻기 질문. <b>전부 "한 번 부르고 끝"</b>입니다. 유일한 자율 지점은 되묻기로, <code>interview_llm</code> 이 <b>다음에 어떤 칸을 물을지 모델이 정합니다</b>(실패 시 템플릿 폴백).</p>
+      <p>다만 단계 사이는 전부 사람이 버튼을 누릅니다: 후보 선택 → 카드 만들기 → 되묻기 시작 → 확정.</p></div>
+
+      <div class="tblw"><table>
+        <tr><th>심사 기준이 요구하는 것</th><th>우리</th></tr>
+        <tr class="bad"><td>도구를 스스로 골라 쓴다</td><td>없음 — 입력을 한 번에 다 주고 한 번에 받음</td></tr>
+        <tr class="bad"><td>결과를 보고 다음 행동을 정한다(루프)</td><td>없음 — 검증 실패해도 <b>버리거나 "확인 필요" 딱지</b>를 붙일 뿐 다시 쓰게 하지 않음</td></tr>
+        <tr class="bad"><td>과정이 증거로 남는다</td><td><code>tool_calls_made</code> 가 API마다 뜻이 달라 통일된 계측 없음</td></tr>
+        <tr class="good"><td>모델이 판단한다</td><td>✓ 되묻기에서 다음 칸·질문을 결정</td></tr>
+      </table></div>
+
+      <div class="note r"><p><b>왜 이게 제일 아픈가</b> — 멘토 ③(10) + <b>현장심사 ③(20)</b>까지 <b>30점</b>이 이 단어에 걸려 있고, 현장은 <b>영상·데모에서 "장면"으로</b> 확인합니다. 지금 우리 영상에는 보여줄 장면이 없습니다.</p></div>
+
+      <div class="fix"><span class="cost">3~4일 · AI 담당</span><div class="h">보완 1. 초안 에이전트 — 검증-반려 루프 <span class="gain">+4</span></div>
+        <p>STAR 초안 생성을 <b>"쓰고 → 검사하고 → 틀리면 스스로 고쳐 쓰는"</b> 루프로. <b>검사기는 이미 있습니다</b>(<code>evidence_checks.py</code> 의 SHA 대조·출처 없는 수치 탐지) — 지금은 맨 끝에서 한 번 쓰고 결과를 버리는데, 그걸 <b>모델에게 돌려주기만</b> 하면 됩니다.</p>
+        <p>실패 시 <b>폴백이 현행 경로</b>라 망해도 오늘의 서비스이고, 스위치로 감싸 <b>꺼진 채 머지 → 켜서 확인</b>(이 팀이 #190·#193에서 이미 한 방식).</p>
+        <p class="kicker">쉬운 설명 → <a href="agentic-easy.html"><b>Agentic 쉽게</b></a> (비유·예시·할 일 4단계·Q&amp;A) · 기술 설계 → <a href="agentic-1025.html">상세 설계</a> (도구·루프·프롬프트·PR 분할)</p>
+      </div>
+
+      <div class="fix"><span class="cost">1일</span><div class="h">보완 2. 과정을 화면에 보이기 <span class="gain">현장 ③의 핵심</span></div>
+        <p>루프를 만들어도 <b>사용자가 못 보면 심사에서 0점</b>입니다. 카드 화면에 "AI 작업 과정 보기" 접힘 영역 하나:</p>
+        <pre>근거 7건 중 3건을 골라 읽음
+초안 작성
+<span class="bad">검증: '응답 30% 개선' 의 출처를 찾지 못함</span>
+<span class="hi">같은 칸을 근거에 있는 내용으로 다시 씀</span>
+<span class="ok">검증 통과 · 4칸 완성</span></pre>
+        <p>이 6줄이 <b>시연 영상에서 "스스로 판단하는 장면"</b>이 됩니다.</p>
+      </div>
+
+      <div class="fix"><span class="cost">반나절</span><div class="h">보완 3. 되묻기 LLM을 발표에서 제대로 주장하기</div>
+        <p>이미 있는 자율성인데 <b>문서가 이를 부정하고 있습니다</b> — <code>docs/GUARDRAILS.md</code> 의 표에 "되묻기 질문: <b>LLM 을 부르지 않는 템플릿</b>" 이라고 적혀 있는데, 실제 코드는 <code>interviews.py:66</code> 에서 <code>next_turn()</code> 으로 LLM을 부릅니다. <b>문서가 낡았습니다.</b></p>
+        <p class="kicker">심사자가 코드와 문서를 같이 보면 신뢰를 잃습니다. 문서를 고치면 ③과 ⑦이 같이 올라갑니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="s4">
+  <div class="item g-lo">
+    <div class="hd"><span class="no">④</span><span class="nm">서비스 개발 충실성</span><span class="sc">13 / 15</span></div>
+    <div class="bd">
+      <p class="crit">"기획한 핵심 기능을 충실히 구현하고, 서비스 가치를 높이는 범위의 기능까지 완성도 있게 개발했는가"</p>
+
+      <div class="now"><b class="t">지금 우리 — 강함</b>
+      <p>merged PR <b>221개</b>. 기획한 핵심(레포 분석 → 경험 추출 → 자소서 카드)을 넘어 <b>공고 매칭(611건 수집)</b>까지 갔습니다. 경로도 두 개 다 완결 — 후보 기반(B)과 직접 작성(A).</p>
+      <p>부가 기능도 얕지 않습니다: 카드 버전 관리(원본 잠금·복원), 마스킹(원문 보존), 되묻기, 근거 커밋 링크, 카드 복사·인쇄, 모바일 대응.</p></div>
+
+      <div class="fix"><span class="cost">0 — 하지 말 것</span><div class="h">보완 1. 새 기능 추가 금지</div>
+        <p>④는 이미 충분합니다. 여기서 더 넣으면 <b>②(안정성)를 깎아먹습니다.</b> 캠퍼스 전체 조사에서 "인프라는 회사급인데 기능이 적다"(J팀)와 반대로, 우리는 <b>기능이 충분한데 포장이 없는</b> 쪽입니다.</p>
+      </div>
+
+      <div class="fix"><span class="cost">반나절</span><div class="h">보완 2. "만든 것"을 한눈에 보이게 <span class="gain">+1</span></div>
+        <p>심사자는 PR 221개를 세지 않습니다. README와 발표에 <b>기능 목록을 한 화면으로</b>. 특히 <b>버전 관리·마스킹·근거 추적</b>은 "자소서 도구"로서 깊이를 보여주는데 지금 어디에도 정리돼 있지 않습니다.</p>
+      </div>
+
+      <div class="fix"><span class="cost">1시간</span><div class="h">보완 3. 미완성 항목 정직하게 표기</div>
+        <p>상위팀 공통 패턴입니다(E팀 "app/ — 아직 껍데기", I팀 "현재 Runtime 상태"). 우리도 <b>매칭 등급 기준 정리 중</b> 같은 걸 README "지금 상태"에 적으면 감점이 아니라 <b>성숙도로 읽힙니다.</b></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="s5">
+  <div class="item g-lo">
+    <div class="hd"><span class="no">⑤</span><span class="nm">Agentic AI 설계·구현</span><span class="sc">13 / 15</span></div>
+    <div class="bd">
+      <p class="crit">"단계 분기·도구 연동·상태 관리·예외 처리가 실제로 구현되어 워크플로우가 끝까지 안정적으로 돌아가는가"</p>
+
+      <div class="now"><b class="t">지금 우리 — 네 요소 중 셋이 최상위</b>
+      <div class="tblw"><table>
+        <tr><th>요구</th><th>우리 구현</th></tr>
+        <tr class="good"><td><b>단계 분기</b></td><td>기능 스위치 4개(<code>ANALYSIS_GROUPING_ENABLED</code> 등)로 경로를 분기 · <code>GroupingVerdict</code>·<code>GroupingExclusionReason</code> · 지문 해시가 같으면 LLM 호출 생략(#177)</td></tr>
+        <tr class="good"><td><b>상태 관리</b></td><td>analysis_job 상태머신 · <code>FOR UPDATE SKIP LOCKED</code> 워커 큐 · <b>카드 버전 규칙</b>(USER_EDIT은 덮어쓰고 나머지는 새 버전) · 새로고침 복구</td></tr>
+        <tr class="good"><td><b>예외 처리</b></td><td><code>AgentUnavailableException</code> · 타임아웃 시 4칸 비움 · LLM 실패 시 템플릿 폴백 · diff 요약 실패 시 커밋 메시지로 대체 · <code>CardGenerationGuard</code></td></tr>
+        <tr class="bad"><td><b>도구 연동</b></td><td><b>여기만 빈칸</b> — 모델이 쓸 수 있는 도구가 없음</td></tr>
+      </table></div>
+      <p>"워크플로우가 끝까지 안정적으로"는 10/25 실측으로 증명됐습니다.</p></div>
+
+      <div class="fix"><span class="cost">③과 동시</span><div class="h">보완 1. 도구 연동 — ③ 보완이 그대로 ⑤ <span class="gain">+1</span></div>
+        <p>③의 초안 에이전트를 만들면 "도구 연동" 칸이 채워집니다. <b>한 작업으로 두 항목(최대 25점)</b>이 같이 올라갑니다.</p>
+      </div>
+
+      <div class="fix"><span class="cost">반나절</span><div class="h">보완 2. 설계를 그림 한 장으로 <span class="gain">+1</span></div>
+        <p>⑤는 "실제로 구현되어 있는가"인데 <b>코드를 읽어야만 알 수 있는 상태</b>입니다. 상태머신·분기·폴백을 다이어그램 1장으로 만들어 README와 테크스펙에. 상위팀(A팀)은 "Agent 처리 흐름도"를 문서 표 맨 위에 둡니다.</p>
+      </div>
+
+      <div class="fix"><span class="cost">반나절</span><div class="h">보완 3. 호출 예산·계측</div>
+        <p>Job당 LLM 호출 수·토큰을 로그 한 줄로. 상위팀(A팀·F팀)이 가진 것이고, 발표 <b>"운영 비용" 슬라이드</b> 재료가 됩니다. 단 <code>tool_calls_made</code> 는 <b>API마다 뜻이 다르니 정의부터 통일</b>하고 채우세요.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="s6">
+  <div class="item g-md">
+    <div class="hd"><span class="no">⑥</span><span class="nm">AI 품질 점검·개선 노력</span><span class="sc">4 / 5</span></div>
+    <div class="bd">
+      <p class="crit">"평가 기준·테스트셋으로 AI 응답 품질을 점검하고, <b>실패를 분석해 고친 기록</b>이 있는가"</p>
+
+      <div class="now"><b class="t">지금 우리 — 자산은 이미 풍부</b>
+      <pre>ai/evals/
+  MODEL_SELECTION_REPORT.md        모델 비교·선정
+  JOB_MATCHING_EVALUATION.md       공고 매칭 평가 (+ 한국어판)
+  ANSWER_SUFFICIENCY_CRITERIA.md   답변 충분성 기준
+  REPOSITORY_COST_MEASUREMENT.md   레포당 운영 비용
+  RESULTS.md · results/            결과 보존
+  fixtures/ · tasks/               정답셋 · 평가 러너
+  job_matching_cases.json 외       케이스 데이터
+ai/scripts/evaluate_prompt_injection.py   지시 주입 시험</pre>
+      <p>기준 문장의 "평가 기준·테스트셋"은 충족합니다.</p></div>
+
+      <p><b>약한 곳</b> — "실패를 <b>분석해 고친</b> 기록"이 <b>흩어져 있습니다.</b> 심사자가 7개 파일을 열어 읽어야 "아 이 팀이 측정하는구나"를 알 수 있습니다.</p>
+
+      <div class="fix"><span class="cost">반나절</span><div class="h">보완 1. MEASUREMENTS.md 한 장으로 집계 <span class="gain">+1</span></div>
+        <p>D팀(상위권)가 이걸로 만점을 받았습니다. 규율을 그대로 빌리면: <b>모델명 필수 · 0건도 분모와 함께 적기(0/382) · 데이터셋 출처 · 날짜.</b> 기존 평가 결과를 이 형식으로 <b>한 표에 모으기만</b> 하면 됩니다.</p>
+      </div>
+
+      <div class="fix"><span class="cost">③ 보완 후 반나절</span><div class="h">보완 2. before/after 숫자 만들기 <span class="gain">발표 재료</span></div>
+        <p>③의 루프를 넣고 <b>같은 후보 20개를 스위치 끄고/켜고</b> 돌려 비교 — 검증 실패율·빈 칸 비율·NEEDS_REVIEW 비율. 기준 문장 <b>"실패를 분석해 고친 기록"에 문자 그대로</b> 들어맞고, 발표 한 줄이 나옵니다: <i>"고쳐쓰기 루프로 빈 칸이 N%→M%로 줄었습니다."</i></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="s7">
+  <div class="item g-lo">
+    <div class="hd"><span class="no">⑦</span><span class="nm">AI 안전성·예외 대응(가드레일)</span><span class="sc">8 / 10</span></div>
+    <div class="bd">
+      <p class="crit">"출력 가드레일·예외 처리·장애 대응·실패 시 사용자 안내를 갖춰 잘못된 출력·장애에 일관되게 대응하는가"</p>
+
+      <div class="now"><b class="t">지금 우리 — 초기 평가보다 강한 항목</b>
+      <p>STAR 출력 검증만 <b>6단계</b>입니다: 빈 칸 처리 → SHA 대조 후 못 맞추면 버림 → 근거 0개 문장은 <b>통째로 삭제</b> → 답변만 근거면 HIGH 금지 → 출처 없는 수치는 "확인 필요"로 강등 → 비밀값 가림.</p>
+      <p>게다가 <b>지시 주입(prompt injection) 대응이 체계적입니다</b> — 주입 문장 6종을 정의하고 표식 낱말(<code>INJECTED-7731</code>)로 추적하며, <code>test_prompt_injection.py</code> 가 <b>LLM 없이 CI에서</b> 돕니다. <code>docs/GUARDRAILS.md</code> 에는 작업별로 "보내는 쪽 장치 / 받는 쪽 장치 / <b>남는 틈</b>"까지 표로 있습니다.</p>
+      <p><b>§5 "알려진 한계" 6개를 솔직히 적어둔 것</b>은 조사한 팀 중에서도 드문 성숙도입니다.</p></div>
+
+      <div class="note r"><p><b>지금 당장 고쳐야 할 것</b> — GUARDRAILS.md 의 표가 <b>코드와 어긋납니다.</b> "되묻기 질문: LLM 을 부르지 않는 템플릿이라 해당 없음"이라고 적혀 있는데 실제로는 <code>interviews.py:66</code> 이 LLM을 부릅니다. <b>그 경로의 가드레일이 문서에 없는 상태</b>입니다.</p></div>
+
+      <div class="fix"><span class="cost">1~2시간</span><div class="h">보완 1. GUARDRAILS.md 갱신 <span class="gain">+1</span></div>
+        <p>되묻기 LLM 행을 실제대로 — 보내는 쪽/받는 쪽 장치와 남는 틈. <b>문서와 코드가 어긋나면 심사자는 다른 주장도 의심합니다.</b></p>
+      </div>
+
+      <div class="fix"><span class="cost">반나절</span><div class="h">보완 2. "실패 시 사용자 안내" 보강 <span class="gain">+1</span></div>
+        <p>기준 문장에 명시된 항목인데 <b>지금은 화면 쪽이 약합니다.</b> AI 실패 시 사용자가 보는 게 무엇인지 점검하고, "AI가 지금 응답하지 않아 초안 없이 카드를 만들었습니다. 직접 작성하거나 나중에 다시 시도하세요" 같은 <b>다음 행동이 있는 안내</b>로.</p>
+      </div>
+
+      <div class="fix"><span class="cost">1시간</span><div class="h">보완 3. 발표용 한 장</div>
+        <p>⑦은 우리 강점인데 <b>보여줄 그림이 없습니다.</b> 입력 필터(#0 제거) → 프롬프트 방어 → 출력 검증 6단계 → 폴백 → 사용자 안내를 <b>계층 그림 1장</b>으로. W팀가 이 그림 하나로 만점을 받았습니다. Q&A "환각 어떻게 막나요"의 답이기도 합니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="s8">
+  <div class="item g-lo">
+    <div class="hd"><span class="no">⑧</span><span class="nm">코드 품질·테스트</span><span class="sc">8 / 10</span></div>
+    <div class="bd">
+      <p class="crit">"단위 테스트에 더해 <b>통합·E2E 테스트까지 갖춰</b> 핵심 기능이 <b>자동으로</b> 검증되는가"</p>
+
+      <div class="now"><b class="t">지금 우리</b>
+      <div class="tblw"><table>
+        <tr><th>종류</th><th>상태</th><th>CI</th></tr>
+        <tr class="good"><td>단위·통합</td><td>BE 테스트 클래스 170개 · AI 31개 파일 · FE</td><td>✅ backend-ci · ai-ci · frontend-ci</td></tr>
+        <tr class="good"><td>계약</td><td><code>contracts/</code> OpenAPI 대조 (analysis·ingest·interview·matching)</td><td>✅</td></tr>
+        <tr class="good"><td>E2E (브라우저·목)</td><td><code>frontend/e2e</code> 30개 — 프로덕션 빌드+preview에 실행</td><td>✅</td></tr>
+        <tr class="warn"><td><b>E2E (실제 스택)</b></td><td><code>e2e/</code> — DB·AI·BE·web 띄우고 브라우저로 로그인~카드 확정. GitHub·LLM만 가짜</td><td>⚠️ <b>필수 체크도 배포 조건도 아님</b></td></tr>
+        <tr class="good"><td>지시 주입</td><td><code>test_prompt_injection.py</code> — LLM 없이 가드레일 검증</td><td>✅</td></tr>
+      </table></div></div>
+
+      <p><b>왜 2점이 깎이나</b> — 기준이 <b>"자동으로 검증되는가"</b>입니다. 제일 중요한 스택 E2E가 자동 게이트가 아닙니다. 코드 주석에 이유가 적혀 있고(흔들릴 때 머지·배포가 같이 막히지 않게) <b>판단으로는 타당하지만, 심사 문장과는 어긋납니다.</b></p>
+
+      <div class="fix"><span class="cost">1~2시간</span><div class="h">보완 1. E2E를 필수 체크로 올리기 <span class="gain">+1</span></div>
+        <p>코드 주석에 <b>방법까지 적혀 있습니다</b> — "필수 체크로 올릴 때는 backend-ci.yml 처럼 항상 돌고 job 으로 건너뛰는 구조로 바꾼다". 그대로 하면 됩니다.</p>
+        <p class="kicker">불안하면 <b>발표 주간 직전에만</b> 필수로 올려도 됩니다. 중요한 건 심사 시점에 "자동 검증된다"가 사실인 것.</p>
+      </div>
+
+      <div class="fix"><span class="cost">30분</span><div class="h">보완 2. 테스트 범위를 정직하게 적기 <span class="gain">신뢰</span></div>
+        <p>⚠️ <code>frontend/e2e-real</code> 은 <b>이름과 달리</b> 계약 fixture가 <code>/api</code>를 가로채서 실제 Spring 호출이 아닙니다. 발표·문서에서 <b>"실서버 E2E"라고 하면 반박당합니다.</b> "스택 E2E(외부 연동은 가짜)"로 정확히.</p>
+      </div>
+
+      <div class="fix"><span class="cost">1시간</span><div class="h">보완 3. 숫자로 보여주기</div>
+        <p>README·테크스펙에 테스트 종류별 개수와 CI 연결을 표로. 심사자가 <b>코드를 안 열어도</b> ⑧을 판단할 수 있게.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="s9">
+  <div class="item g-lo">
+    <div class="hd"><span class="no">⑨</span><span class="nm">배포·운영</span><span class="sc">9 / 10 — 거의 만점</span></div>
+    <div class="bd">
+      <p class="crit">"URL 접속·CI/CD·환경 분리를 갖춰 운영 가능한 상태로 배포했는가"</p>
+
+      <div class="now"><b class="t">지금 우리</b>
+      <p><b>URL 접속</b> — <code>https://3-37-14-211.sslip.io</code> 가동 중(Caddy·HTTPS). <b>CI/CD</b> — <code>deploy.yml</code> 이 <code>workflow_run</code> 으로 <b>develop CI가 성공한 커밋만</b> 배포합니다. fork PR 코드가 서버에서 도는 걸 막는 gate 조건까지 주석으로 설명돼 있어 <b>보안 감각이 상위권</b>입니다. <b>환경 분리</b> — 기능 스위치 4개 + <code>.env</code> + <code>VITE_API_MOCK</code> 으로 모드 분리.</p>
+      <p>운영 습관도 증명됐습니다 — <b>머지와 켜기를 분리</b>(#190 꺼진 채 머지 → #193 설정 후 켬), DB 백업 스크립트 존재.</p></div>
+
+      <div class="fix"><span class="cost">1~2시간</span><div class="h">보완 1. 헬스체크 실패 시 자동 롤백</div>
+        <p>J팀 벤치마크. 배포 후 <code>/api/health</code> 확인 → 실패하면 이전 이미지로 되돌리기. <b>점수보다 발표 전날 사고 보험</b>입니다.</p>
+      </div>
+
+      <div class="fix"><span class="cost">1시간 · 선택</span><div class="h">보완 2. 분석 중 재배포 회피</div>
+        <p>K팀 패턴(<code>restart.lock</code>). 분석 Job이 RUNNING일 때 워커 재시작을 늦춥니다. <b>발표 시연 중 배포가 돌면</b> 생기는 사고를 막습니다.</p>
+      </div>
+
+      <div class="fix"><span class="cost">30분</span><div class="h">보완 3. 배포 구조를 문서 한 장으로</div>
+        <p>⑨는 이미 좋은데 <b>심사자가 알아보기 어렵습니다.</b> "CI 성공 커밋만 배포" 같은 좋은 결정을 DEPLOYMENT.md 상단에 <b>한 단락으로</b> 요약하세요.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="s10">
+  <div class="item g-hi">
+    <div class="hd"><span class="no">⑩</span><span class="nm">문서화·개발문화·협업</span><span class="sc">3 / 5</span></div>
+    <div class="bd">
+      <p class="crit">"README·API 문서·그라운드룰·코드리뷰가 <b>고루</b> 남아 있고 코드리뷰가 실제로 활발한가"</p>
+
+      <div class="note r"><p><b>정정 (10/25 재조사)</b> — 처음에 "README가 없다"고 썼는데 <b>틀렸습니다.</b> 루트만 보고 판단했는데, <b>파트별 README가 상당히 충실합니다.</b> 점수를 2 → 3으로 올립니다.</p></div>
+
+      <div class="now"><b class="t">지금 우리 — 실제 README 자산</b>
+      <div class="tblw"><table>
+        <tr><th>파일</th><th>크기</th><th>상태</th></tr>
+        <tr class="good"><td><code>frontend/README.md</code></td><td>23.5 KB</td><td>🟢 실행법(<code>npm install/dev/test/e2e</code>) · 계약 계층 · 라우트 맵 · 디자인 토큰 · 목 시나리오 · Job 복구 · <b>"아직 없는 것" 5개 솔직히</b></td></tr>
+        <tr class="good"><td><code>ai/README.md</code></td><td>14.4 KB</td><td>🟢 구조 → 로컬 실행 → Swagger/OpenAPI → 수집(A-1) → STAR(A) → 공고 RAG. <b>파트 README의 모범</b></td></tr>
+        <tr class="good"><td><code>contracts/README.md</code></td><td>6.5 KB</td><td>🟢 BE·AI 계약 설명</td></tr>
+        <tr class="good"><td><code>e2e/README.md</code></td><td>3.8 KB</td><td>🟢 스택 E2E 실행법</td></tr>
+        <tr class="good"><td><code>docs/openapi/README.md</code></td><td>1.2 KB</td><td>🟢</td></tr>
+        <tr class="bad"><td><code>backend/README.md</code></td><td>—</td><td>🔴 <b>없음</b>. <code>ARCHITECTURE.md</code> 는 있지만 실행법·테스트 명령이 없음 — <b>세 파트 중 백엔드만 빔</b></td></tr>
+        <tr class="warn"><td><code>README.md</code> (루트)</td><td>3.6 KB</td><td>🟡 있긴 한데 <b>허브 역할을 못 함</b> — 제목 <code># ktc4-team-05</code>, 본문은 프론트 작업 기록 나열. <b>위의 좋은 README들로 가는 길이 안 보임</b></td></tr>
+      </table></div></div>
+
+      <div class="tblw"><table>
+        <tr><th>기준 4요소</th><th>우리</th></tr>
+        <tr class="good"><td><b>코드리뷰</b></td><td>🟢 <b>전국 1등 수준</b> — merged PR 221개, 리뷰가 실제로 설계를 바꾼 기록 다수. <b>리뷰가 꾸준한 팀은 소수</b></td></tr>
+        <tr class="good"><td><b>API 문서</b></td><td>🟢 <code>docs/openapi/</code>(ai.json·backend.json) + <code>contracts/</code> 4개 도메인 + CI 대조</td></tr>
+        <tr class="warn"><td><b>README</b></td><td>🟡 <b>내용은 있는데 입구가 없음</b> — 파트별은 충실, 루트가 허브를 못 하고 backend가 빠짐</td></tr>
+        <tr class="bad"><td><b>그라운드룰</b></td><td>🔴 <b>여전히 없음</b> — <code>convention-check.yml</code> 이 규칙을 강제하는데 그 규칙을 적은 글이 없음. <b>4요소 중 유일한 0</b></td></tr>
+      </table></div>
+      <p><b>기준 문장의 "고루"</b>가 여기서 작동합니다 — 셋은 있고 하나가 0, README는 길이 안 보이는 상태라 5점 중 3점입니다.</p>
+
+      <div class="note b"><p><b>여전히 억울한 항목입니다.</b> 코드리뷰는 전국 1등, 파트 README도 충실한데 — <b>입구(루트)와 그라운드룰이 없어서</b> 그 강점이 점수로 안 바뀝니다. <b>반나절 글쓰기로 +2점.</b></p></div>
+
+      <div class="fix"><span class="cost">2~3시간</span><div class="h">보완 1. 루트 README를 <b>허브로</b> (①과 동일 작업) <span class="gain">+1</span></div>
+        <p>처음 생각보다 <b>할 일이 적습니다.</b> 좋은 README가 이미 네 개 있으니, 루트는 <b>제품 설명 + 그 넷으로 가는 길</b>만 만들면 됩니다 — A팀(만점팀)이 쓴 바로 그 "허브형" 구조입니다.</p>
+        <p><b>같이 할 것 ①</b> — <code>backend/README.md</code> 신설. 세 파트 중 백엔드만 비어 있어 <b>"고루"에서 걸립니다.</b> ai/README 형식을 그대로 베껴 구조·실행·테스트·주요 모듈만 (1시간).</p>
+        <p><b>같이 할 것 ②</b> — <code>frontend/README.md</code> 의 날짜별 작업 기록 15개를 <code>frontend/docs/CHANGELOG.md</code> 로 옮기기. 지금은 유용한 내용(계약 계층·라우트 맵·목 시나리오·<b>"아직 없는 것"</b>)이 <b>일지 더미에 묻혀</b> 있습니다. 옮기기만 하면 23KB짜리 좋은 문서가 드러납니다 (30분).</p>
+      </div>
+
+      <div class="fix"><span class="cost">1~2시간</span><div class="h">보완 2. docs/COLLABORATION.md <span class="gain">+1</span></div>
+        <p><b>새로 정하는 게 아니라 이미 하는 걸 적는 일</b>입니다 — 브랜치 전략(feature → develop → main), 리뷰 규칙, 컨벤션(<code>convention-check.yml</code> 주석에 철학이 이미 적혀 있으니 문서로 승격), 마이그레이션 번호 규칙(#123), PR 쪼개는 기준.</p>
+        <p class="kicker"><b>제출물 6번(협업문서)</b>이 요구하는 항목과 정확히 같습니다 — 한 번 쓰고 두 군데 씁니다.</p>
+      </div>
+
+      <div class="fix"><span class="cost">1시간</span><div class="h">보완 3. "리뷰가 설계를 바꾼 사례 3개" 큐레이션 <span class="gain">+1</span></div>
+        <p>⑩의 마지막 문장이 <b>"코드리뷰가 실제로 활발한가"</b>입니다. 심사자는 PR 221개를 안 읽으니 <b>대표 사례 3개</b>를 골라 "이 리뷰 → 이렇게 바뀜"으로 협업문서에 넣으세요.</p>
+        <p>후보: <b>#110</b>(since 제거 — 머지 커밋 23개 중 22개가 안 잡힌다는 걸 직접 재보고 판단을 바꿈) · <b>#158</b>(수동 배포 CI 확인 — 지적보다 더 정확하게 고침) · <b>#154</b>(버그를 가드레일 설계로 승격). <b>이게 우리 최강 무기입니다.</b></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="s11">
+  <h2>실행 순서 — 효율 순</h2>
+  <div class="tblw"><table>
+    <tr><th>#</th><th>작업</th><th>노력</th><th>올라가는 항목</th><th>점수</th></tr>
+    <tr class="good"><td>1</td><td><b>루트 README 허브화 + backend/README 신설 + frontend 일지 분리</b></td><td>반나절</td><td>① + ⑩ + 제출물 4</td><td><b>+3</b></td></tr>
+    <tr class="good"><td>2</td><td><b>docs/COLLABORATION.md</b> + 리뷰 사례 3개</td><td>반나절</td><td>⑩ + 제출물 6</td><td><b>+1</b></td></tr>
+    <tr class="bad"><td>3</td><td><b>초안 에이전트(검증-반려 루프) + 과정 표시</b></td><td>3~4일</td><td>③ + ⑤ + <b>현장 ③(20점)</b></td><td><b>+5</b></td></tr>
+    <tr class="good"><td>4</td><td>PRODUCT.md</td><td>반나절</td><td>① + 발표 대본</td><td>+1</td></tr>
+    <tr class="good"><td>5</td><td>GUARDRAILS.md 갱신 + 가드레일 그림</td><td>2~3시간</td><td>⑦</td><td>+1</td></tr>
+    <tr class="good"><td>6</td><td>MEASUREMENTS.md 집계</td><td>반나절</td><td>⑥</td><td>+1</td></tr>
+    <tr class="good"><td>7</td><td>E2E 필수 체크 승격 + 범위 정직 표기</td><td>2시간</td><td>⑧</td><td>+1</td></tr>
+    <tr class="good"><td>8</td><td>테스트 계정·샘플 저장소 안내</td><td>1시간</td><td>② + 제출물 1</td><td>+1</td></tr>
+    <tr class="warn"><td>9</td><td>실패 시 사용자 안내 보강</td><td>반나절</td><td>⑦</td><td>+1</td></tr>
+    <tr><td>10</td><td>롤백·폴링 주기 (사고 예방)</td><td>2~3시간</td><td>② ⑨ 방어</td><td>0</td></tr>
+  </table></div>
+
+  <div class="note g"><p><b>1·2번만 해도 +4점입니다. 하루면 끝나고, 코드를 한 줄도 안 건드립니다.</b><br>
+  3번(3~4일)은 코드 작업이지만 <b>멘토 5점 + 현장 20점</b>이 걸려 있어 투자 대비가 가장 큽니다. 11/1 전에 끝내고 기능 동결하세요.</p></div>
+
+  <h3>주차별로 놓으면</h3>
+  <pre>10/26(일)~10/29(수)  1·2·4·5·6 (문서 주간 — 여러 명이 나눠서 병렬)
+10/28(화)~10/31(금)  3 초안 에이전트 (AI 담당, 스위치 꺼진 채 머지 → 켜서 검증)
+11/1(토)             <span class="hi">기능 동결</span> · 7·8·10 마무리 · before/after 측정
+11/2(일)~11/8(토)    테크스펙 조립 · 발표 자료 · 시연 영상 촬영
+11/9(일)~11/10(월)   리허설 2회 (Q&A 3종 포함) · 제출물 링크 점검
+11/11(화) 17:00      <span class="hi">제출</span>  →  11/12(수) 18:00 경북대 발표</pre>
+</section>
+
+
+<nav class="pager">
+  <a class="prev" href="roadmap-1026.html"><span class="lbl">← 이전</span><span class="ttl">회의 반영</span></a>
+  <a class="next" href="improve-1025.html"><span class="lbl">다음 →</span><span class="ttl">보완 계획</span></a>
+</nav>
+
+<p class="foot">2026-10-25 · 점수는 배점표 기준 추정치입니다(실제 채점자가 다르게 볼 수 있습니다) · 근거: <code>origin/develop</code> 코드 · 10/25 운영 실측 · 캠퍼스 전체 비교 · 교차검증 1회 · <a href="agentic-1025.html">AI 설계</a> · <a href="readme-1025.html">README 벤치마크</a> · 전체 자료</p>
+</div>
+</body>
+</html>
