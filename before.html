@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>이전 자료 (10/25~26) — Gitory</title>
+<link rel="stylesheet" href="claude/tokens.css">
+<link rel="stylesheet" href="claude/style.css">
+<link rel="stylesheet" href="nav.css">
+<style>
+.wrap{display:block;max-width:960px}
+.cards{display:grid;gap:14px;margin:18px 0}
+a.card{display:block;text-decoration:none;color:inherit;border:1px solid var(--color-rule);
+  border-left:5px solid var(--color-rule);border-radius:var(--radius-md);padding:18px 22px;
+  background:var(--color-surface);transition:border-color var(--dur-fast) var(--ease-out)}
+a.card:hover{border-left-color:var(--color-ink)}
+a.card .n{font:600 11px var(--font-code);color:var(--color-muted);display:block;margin-bottom:5px}
+a.card strong{display:block;font:700 19px/1.4 var(--font-display);margin-bottom:7px;color:var(--color-ink)}
+a.card small{display:block;color:var(--color-muted);font-size:13.5px;line-height:1.7}
+a.card em{display:block;margin-top:10px;font-style:normal;font-size:12.5px;color:var(--color-blue)}
+.back{display:inline-block;margin:0 0 6px;font:700 13px var(--font-body);color:var(--color-blue);text-decoration:none}
+.back:hover{color:var(--color-red)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <a class="back" href="index.html">← 최신 자료 (11/4)</a>
+  <h1>이전 자료 — 10/25 ~ 10/26</h1>
+  <p class="context">10/25 기술멘토링 전후로 만든 자료입니다. <b>그 시점 기준</b>이라 지금과 다른 부분이 있습니다.</p>
+  <p class="owner">특히 <b>③ Agentic 경험</b>은 당시 10점 만점에 4점이었는데, 지금은 10점입니다 —
+  최신 상태는 <a href="run-1104.html">11/4 실측</a>과 <a href="teams-1104.html">24팀 채점</a>을 보세요.</p>
+</header>
+
+<h2>문서 7개</h2>
+
+<div class="cards">
+  <a class="card" href="roadmap-1026.html">
+    <span class="n">01 · 10/26</span>
+    <strong>팀 회의 결정사항 — 심사 기준 대조</strong>
+    <small>10/25 회의에서 나온 7가지(공고 개편 · 에이전트 일괄처리 · AI 자소서 · 진행 표시 · 에러 점검 · UI 점검)를 <b>배점·제출물 요구사항과 대조</b>. 이미 있는 재료와 남은 일.</small>
+    <em>→</em>
+  </a>
+
+  <a class="card" href="rubric-1025.html">
+    <span class="n">02 · 10/25</span>
+    <strong>멘토 심사 100점 — 항목별 현황과 보완</strong>
+    <small>배점표 10항목 각각을 <b>파일 증거로</b> 진단하고, 무엇을 보완하면 몇 점 오르는지를 노력과 함께.
+    <b>이때 총점 77점 · ③ Agentic 4점</b>이었습니다.</small>
+    <em>→</em>
+  </a>
+
+  <a class="card" href="improve-1025.html">
+    <span class="n">03 · 10/25</span>
+    <strong>보완 계획 + 제출물 6종 대조</strong>
+    <small>항목별 액션(파일 경로·노력·효과) + 제출물 6종을 "꼭 포함할 내용" 단위로 대조 + 날짜별 일정.</small>
+    <em>→</em>
+  </a>
+
+  <a class="card" href="agentic-easy.html">
+    <span class="n">04</span>
+    <strong>Agentic 쉽게 — 왜 중요하고 뭘 하면 되나</strong>
+    <small>전문 용어 없이 비유로. "에이전트"가 뭔지, 그때 어디서 막혀 있었는지, 할 일 4단계. AI 담당이 아니어도 읽을 수 있습니다.</small>
+    <em>→</em>
+  </a>
+
+  <a class="card" href="agentic-1025.html">
+    <span class="n">05</span>
+    <strong>AI 에이전트 상세 설계 <span class="tag t-lo">기술</span></strong>
+    <small>LLM 호출 지점 · 검증 단계 · 빈 칸 분석 · 도구와 루프 설계 · 구현 PR 분할.
+    <b>여기 적은 ①②④ 단계가 지금은 들어왔습니다.</b></small>
+    <em>→</em>
+  </a>
+
+  <a class="card" href="industry-1025.html">
+    <span class="n">06</span>
+    <strong>다른 서비스는 어떻게 하나</strong>
+    <small>Devin · Cursor · Lovable · v0 등 <b>10개 제품</b>이 AI 작업 과정을 어떻게 보여주는지. 공통 패턴 5가지와 우리 적용점.</small>
+    <em>→</em>
+  </a>
+
+  <a class="card" href="readme-1025.html">
+    <span class="n">07</span>
+    <strong>README 다시 쓰기 — 벤치마크와 초안</strong>
+    <small>잘 쓰인 README 5개 실물 + 공통 골격 6가지 + 우리 초안.</small>
+    <em>초안 전문: <a href="README-draft.md">README-draft.md</a> →</em>
+  </a>
+</div>
+
+<div class="note b">
+  <p><b>10/25 → 11/4 사이에 달라진 것</b></p>
+  <p>· 총점 <b>77 → 90</b> · ③ Agentic 경험 <b>4 → 10</b> (가장 많이 오름)<br>
+  · 10/25에 "남은 일"로 적었던 <b>자소서 연결 · Agentic 장면 · 매칭 필터</b>가 전부 들어왔습니다<br>
+  · 그래서 이 문서들의 <b>"할 일" 부분은 대부분 지난 이야기</b>입니다 — 배경과 기준을 볼 때만 참고하세요</p>
+</div>
+
+<p class="foot"><a href="index.html">← 최신 자료로 돌아가기</a> · 조사 대상 저장소에는 아무것도 쓰지 않았습니다(읽기 전용)</p>
+</div>
+</body>
+</html>

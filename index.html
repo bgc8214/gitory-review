@@ -23,6 +23,18 @@ a.card.hi{border-left-color:var(--color-red)}
 .meta div{border:1px solid var(--color-rule);border-radius:var(--radius-sm);padding:11px 14px;background:var(--color-surface)}
 .meta b{display:block;font-size:11px;color:var(--color-muted);letter-spacing:.05em;margin-bottom:3px}
 .meta span{font:700 17px var(--font-display)}
+
+.todo{display:grid;gap:8px;margin:16px 0}
+.todo div{display:grid;grid-template-columns:28px 1fr auto;gap:12px;align-items:center;
+  border:1px solid var(--color-rule);border-radius:var(--radius-sm);padding:10px 14px;background:var(--color-surface)}
+.todo b{font:700 13px var(--font-code);color:var(--color-muted);text-align:center}
+.todo span{font-size:14.5px}
+.todo em{font-style:normal;font-size:12.5px;color:var(--color-muted);white-space:nowrap}
+a.card.old{border-left-color:var(--color-rule);background:transparent}
+a.card.old strong{color:var(--color-muted)}
+a.card.old:hover{border-left-color:var(--color-ink)}
+a.card.old:hover strong{color:var(--color-ink)}
+h2{margin-top:36px}
 </style>
 </head>
 <body>
@@ -30,79 +42,77 @@ a.card.hi{border-left-color:var(--color-red)}
 
 <header class="hero">
   <h1>Gitory — 심사 대비 분석 자료</h1>
-  <p class="context">멘토 심사 100점 기준 현황 진단 · 보완 방향 · AI 에이전트 설계 · 업계 사례 조사</p>
-  <p class="owner"><b>코드 마감 11/6(금)</b> · 제출 11/11(수) 17:00 · 경북대 발표회 11/12(목) 18:00</p>
+  <p class="context">11/4 전 구간 실측 · 24팀 채점 · 멘토링 질문 답변 · AI 에이전트 설계 · 업계 사례</p>
+  <p class="owner"><b>코드 마감 11/6(금)</b> · 제출 11/11(화) · 경북대 발표회 11/12(수)</p>
 </header>
 
 <div class="meta">
-  <div><b>현재 추정</b><span>77 / 100</span></div>
-  <div><b>보완 후</b><span>93 / 100</span></div>
-  <div><b>최대 결손</b><span>③ Agentic</span></div>
-  <div><b>코드 마감까지</b><span>11일</span></div>
+  <div><b>10/25</b><span>77 / 100</span></div>
+  <div><b>11/4</b><span>90 / 100</span></div>
+  <div><b>24팀 중</b><span>1위</span></div>
+  <div><b>남은 이틀에</b><span>95 가능</span></div>
 </div>
 
 <h2>읽는 순서</h2>
 
 <div class="cards">
-  <a class="card hi" href="roadmap-1026.html">
-    <span class="n">★ 먼저 이것 · 10/26</span>
-    <strong>회의 결정사항 — 심사 기준 대조</strong>
-    <small>10/25 회의에서 나온 7가지(공고 개편 · 에이전트 일괄처리 · AI 자소서 · 진행 표시 · 에러 점검 · UI 점검)를 <b>배점·제출물 요구사항과 대조</b>. 이미 있는 재료와 남은 일, 코드 마감까지의 실행 순서.</small>
+  <a class="card hi" href="run-1104.html">
+    <span class="n">★ 먼저 이것 · 11/4</span>
+    <strong>전 구간 실측 — 온보딩부터 자소서까지</strong>
+    <small>데이터가 빈 계정으로 <b>심사위원과 똑같은 동선</b>을 처음부터 끝까지 돌린 기록. 단계별 소요 시간, 6주차·10/25 피드백 반영 현황, <b>제출물 6종 점검</b>, 남은 문제 6개.</small>
     <em>여기부터 보세요 →</em>
   </a>
 
-  <a class="card hi" href="rubric-1025.html">
-    <span class="n">01 · 진단</span>
-    <strong>멘토 심사 100점 — 항목별 현황과 보완</strong>
-    <small>배점표 10항목 각각에 <b>지금 어떻게 구현돼 있는지를 파일 증거로</b>, <b>무엇을 보완하면 몇 점 오르는지</b>를 노력과 함께. 강한 항목과 약한 항목이 어디인지.</small>
-    <em>가장 실용적 →</em>
+  <a class="card hi" href="teams-1104.html">
+    <span class="n">01 · 11/4</span>
+    <strong>24팀 100점 채점 — 순위 1~24</strong>
+    <small>24팀 <b>코드 상위 6파일을 직접 읽고</b> 파일 트리 27,000줄을 긁어 같은 날 같은 방법으로 채점. 항목별 1위가 어디고 우리가 어디서 뒤지는지, 상위권 팀이 무엇으로 올라갔는지.</small>
+    <em>우리 위치 →</em>
   </a>
 
-  <a class="card" href="improve-1025.html">
-    <span class="n">02 · 계획</span>
-    <strong>보완 계획 + 제출물 6종 대조</strong>
-    <small>항목별 액션(파일 경로·노력·효과) + 현장심사 40% 대비 + <b>제출물 6종을 "꼭 포함할 내용" 단위로 대조</b> + 날짜별 일정.</small>
-    <em>실행 계획 →</em>
-  </a>
-
-  <a class="card hi" href="agentic-easy.html">
-    <span class="n">03 · AI</span>
-    <strong>Agentic 쉽게 — 왜 점수가 낮고 뭘 하면 되나 <span class="tag t-hi">30점</span></strong>
-    <small>전문 용어 없이 — "에이전트"가 뭔지 비유로, 지금 어디서 막혀 있는지 실제 동작 예시로, 할 일 4단계를 위험도·소요와 함께. 나올 질문 5개 답변까지.</small>
-    <em>AI 담당 아니어도 읽을 수 있습니다 →</em>
-  </a>
-
-  <a class="card" href="agentic-1025.html">
-    <span class="n">04 · AI 설계</span>
-    <strong>AI 에이전트 상세 설계 <span class="tag t-lo">기술</span></strong>
-    <small>LLM 호출 4곳 · 지금 돌아가는 검증 6단계 · 빈 칸 분석 · 도구 3개와 루프 설계 · <b>구현 4단계 PR 분할</b>(1·2단계는 동작 변화 0).</small>
-    <em>AI 담당자용 (파일·함수 단위) →</em>
-  </a>
-
-  <a class="card" href="industry-1025.html">
-    <span class="n">05 · 업계</span>
-    <strong>다른 서비스는 어떻게 하나</strong>
-    <small>Devin · Cursor · Lovable · v0 등 <b>10개 제품</b>이 AI 작업 과정을 어떻게 보여주는지 + 개발자가 뭘 계측하는지. <b>공통 패턴 5가지</b>와 우리 적용점, 작은 팀의 최소 5순위.</small>
-    <em>공식 문서 1차 확인 기준 →</em>
-  </a>
-
-  <a class="card" href="readme-1025.html">
-    <span class="n">06 · README</span>
-    <strong>README 다시 쓰기 — 벤치마크와 초안</strong>
-    <small>잘 쓰인 README 5개 실물 + 공통 골격 6가지 + <b>우리 초안 작성본</b>. 반나절로 심사 ①·⑩과 제출물 4번을 동시에.</small>
-    <em>초안 전문: <a href="README-draft.md">README-draft.md</a> →</em>
+  <a class="card" href="review-1101.html">
+    <span class="n">02 · 11/1</span>
+    <strong>멘토링 질문 4개 답변</strong>
+    <small>현직 개발자가 보는 순서 · 발표 10분 구성 · 핵심 기능 하나 vs 전체 흐름 · <b>사람이 끼어드는 게 감점인가</b>.</small>
+    <em>발표 준비 →</em>
   </a>
 </div>
+
+<h2>이틀 안에 할 것</h2>
+
+<div class="todo">
+  <div><b>1</b><span>README 맨 위에 "서비스 써보기" 링크</span><em>5분</em></div>
+  <div><b>2</b><span>카드 생성 → 공고 매칭 전환 버그</span><em>30분</em></div>
+  <div><b>3</b><span>에이전트 흐름도 한 장 (발표에도 씀)</span><em>2시간</em></div>
+  <div><b>4</b><span>테크스펙에 「에이전트 설계」 절</span><em>3시간</em></div>
+  <div><b>5</b><span><code>JobErrorCode.catch('INTERNAL_ERROR')</code></span><em>5분</em></div>
+  <div><b>6</b><span>분석 실패 알림 (Discord Webhook)</span><em>1시간</em></div>
+</div>
+
+<p class="kicker">자세한 근거는 <a href="run-1104.html">11/4 실측</a>과 <a href="teams-1104.html">24팀 채점</a>에 있습니다.</p>
+
+<h2>이전 자료</h2>
+
+<div class="cards">
+  <a class="card old" href="before.html">
+    <span class="n">10/25 ~ 10/26 · 7개 문서</span>
+    <strong>지난 멘토링 자료 모음 →</strong>
+    <small>회의 결정사항 대조 · 심사 100점 항목별 진단 · 보완 계획 · Agentic 설계 · 업계 사례 · README 벤치마크.
+    <b>10/25 기준이라 지금과 다른 부분이 있습니다</b> — 최신 상태는 위 두 문서를 보세요.</small>
+    <em>따로 보기 →</em>
+  </a>
+</div>
+
 
 <div class="note b">
   <p><b>이 자료에 대해</b></p>
-  <p>· 2026-10-25 운영 서비스(<code>3-37-14-211.sslip.io</code>) 전 기능을 실제로 실행해보고, <code>origin/develop</code> 코드를 대조해 작성했습니다.<br>
+  <p>· 운영 서비스(<code>3-37-14-211.sslip.io</code>)를 직접 전 구간 실행하고 <code>origin/develop</code> 코드를 대조해 작성했습니다.<br>
   · 점수는 <b>배점표 기준 추정치</b>입니다 — 실제 채점자가 다르게 볼 수 있습니다.<br>
-  · 다른 팀 조사 결과는 <b>이 공유본에서 제외</b>했습니다.<br>
+  · 24팀 비교는 <b>공개 저장소를 읽기 전용으로 조사</b>한 것이며, 채점 방법과 한계는 각 문서에 적었습니다.<br>
 </p>
 </div>
 
-<p class="foot">2026-10-26 · 조사 대상 저장소에는 아무것도 쓰지 않았습니다(읽기 전용) · 운영 <a href="https://3-37-14-211.sslip.io/">https://3-37-14-211.sslip.io</a></p>
+<p class="foot">2026-11-05 <a href="https://3-37-14-211.sslip.io/">https://3-37-14-211.sslip.io</a></p>
 </div>
 </body>
 </html>
