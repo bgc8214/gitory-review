@@ -42,41 +42,50 @@ h2{margin-top:36px}
 
 <header class="hero">
   <h1>Gitory — 심사 대비 분석 자료</h1>
-  <p class="context">24팀 100점 채점 · 우리 77 → 90 · 항목별 현황과 남은 이틀</p>
+  <p class="context">11/5 코드 리뷰 · 24팀 100점 채점 · 우리 77 → 90 → <b>93</b> · 남은 엿새</p>
   <p class="owner"><b>코드 마감 11/6(금)</b> · 제출 11/11(화) · 경북대 발표회 11/12(수)</p>
 </header>
 
 <div class="meta">
   <div><b>10/25</b><span>77 / 100</span></div>
-  <div><b>11/4</b><span>90 / 100</span></div>
+  <div><b>11/5</b><span>93 / 100</span></div>
   <div><b>24팀 중</b><span>1위</span></div>
-  <div><b>남은 이틀에</b><span>95 가능</span></div>
+  <div><b>2위와</b><span>+11</span></div>
 </div>
 
 <h2>읽는 순서</h2>
 
 <div class="cards">
+  <a class="card hi" href="review-1105.html">
+    <span class="n">★ 11/5 · 최신</span>
+    <strong>멘토링 이후 24시간 — 무엇이 들어왔나</strong>
+    <small>11/4 멘토링 뒤 머지된 <b>PR 12개</b>와 새 문서 3개를 코드로 확인했습니다.
+    「남은 이틀」 6가지가 지금 어떤 상태인지, <b>점수가 90 → 93 이 된 이유</b>, 올려 준 질문 2개 답,
+    그리고 <b>지금 가장 손해 보는 곳 셋</b>.</small>
+    <em>여기부터 →</em>
+  </a>
+
   <a class="card hi" href="teams-1104.html">
-    <span class="n">★ 11/4</span>
+    <span class="n">11/4</span>
     <strong>24팀 100점 채점 — 순위 1~24</strong>
     <small>24팀 <b>코드 상위 6파일을 직접 읽고</b> 파일 트리 27,000줄을 긁어 같은 날 같은 방법으로 채점.
-    항목별 1위가 어디고 우리가 어디서 뒤지는지, <b>우리 77 → 90 이 어떻게 바뀌었는지</b>, 상위권 팀이 무엇으로 올라갔는지.</small>
-    <em>열어 보기 →</em>
+    항목별 1위가 어디고 우리가 어디서 뒤지는지, 상위권 팀이 무엇으로 올라갔는지.</small>
+    <em>우리 위치 →</em>
   </a>
 </div>
 
-<h2>이틀 안에 할 것</h2>
+<h2>엿새 안에 할 것</h2>
 
 <div class="todo">
-  <div><b>1</b><span>README 맨 위에 "서비스 써보기" 링크</span><em>5분</em></div>
-  <div><b>2</b><span>카드 생성 → 공고 매칭 전환 버그</span><em>30분</em></div>
-  <div><b>3</b><span>에이전트 흐름도 한 장 (발표에도 씀)</span><em>2시간</em></div>
-  <div><b>4</b><span>테크스펙에 「에이전트 설계」 절</span><em>3시간</em></div>
-  <div><b>5</b><span><code>JobErrorCode.catch('INTERNAL_ERROR')</code></span><em>5분</em></div>
-  <div><b>6</b><span>분석 실패 알림 (Discord Webhook)</span><em>1시간</em></div>
+  <div><b>1</b><span>README 의 "자소서 초안(준비 중)" 세 곳 고치기</span><em>20분</em></div>
+  <div><b>2</b><span>README 맨 위에 운영 주소 한 줄</span><em>5분</em></div>
+  <div><b>3</b><span>#810 (매칭 전환 버그) 머지</span><em>리뷰만</em></div>
+  <div><b>4</b><span>에이전트 흐름 그림을 지금 흐름으로 (10/19 판)</span><em>2시간</em></div>
+  <div><b>5</b><span>서버 <code>RATE_LIMIT_ENABLED</code> · CloudWatch 경보 확인</span><em>6분</em></div>
+  <div><b>6</b><span>도메인 (IP 주소 대신)</span><em>30분</em></div>
 </div>
 
-<p class="kicker">근거는 <a href="teams-1104.html">24팀 채점 §6</a>에 있습니다.</p>
+<p class="kicker">하나하나의 근거는 <a href="review-1105.html">11/5 코드 리뷰 §7</a>에 있습니다.</p>
 
 <h2>이전 자료</h2>
 
@@ -93,7 +102,7 @@ h2{margin-top:36px}
 
 <div class="note b">
   <p><b>이 자료에 대해</b></p>
-  <p>· 운영 서비스(<code>3-37-14-211.sslip.io</code>)를 직접 전 구간 실행하고 <code>origin/develop</code> 코드를 대조해 작성했습니다.<br>
+  <p>· <code>origin/develop</code> 코드와 PR 본문, 운영 서버 응답을 직접 대조해 작성했습니다.<br>
   · 점수는 <b>배점표 기준 추정치</b>입니다 — 실제 채점자가 다르게 볼 수 있습니다.<br>
   · 24팀 비교는 <b>공개 저장소를 읽기 전용으로 조사</b>한 것이며, 채점 방법과 한계는 각 문서에 적었습니다.<br>
 </p>
