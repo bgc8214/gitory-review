@@ -288,9 +288,7 @@ table{font-variant-numeric:tabular-nums}
 <nav class="docnav">
   <a class="home" href="index.html">⌂ 전체</a>
   <span class="sep"></span>
-  <a class="d" href="run-1104.html"><span class="k">★</span>11/4 실측</a>
-  <a class="d on" href="teams-1104.html"><span class="k">01</span>24팀 채점</a>
-  <a class="d" href="review-1101.html"><span class="k">02</span>질문 답변</a>
+  <a class="d on" href="teams-1104.html"><span class="k">★</span>24팀 채점</a>
   <span class="sep"></span>
   <a class="d" href="before.html">이전 자료 (10/25~26) →</a>
 </nav>
@@ -306,6 +304,8 @@ table{font-variant-numeric:tabular-nums}
   <a href="#q1">1. 순위 1~24</a>
   <a href="#q2">2. 항목별</a>
   <a href="#q3">3. 우리 77 → 90</a>
+  <a href="#q3b">3-2. ③ Agentic 이 뒤집힌 과정</a>
+  <a href="#q3c">3-3. 열흘 동안 24팀</a>
   <a href="#q4">4. 상위권 팀</a>
   <a href="#q5">5. 채점 방법</a>
   <a href="#q6">6. 남은 이틀</a>
@@ -429,6 +429,83 @@ table{font-variant-numeric:tabular-nums}
 <p class="say">10/25에 가장 약했던 ③ Agentic 경험(4점)이 <b>+6 으로 가장 많이 올랐습니다.</b>
 안 오른 건 ②⑥⑦⑨ 넷인데, <b>버그 하나 · 평가 수 · 알림 하나 · 주소 하나</b> 입니다.</p>
 </section>
+
+<section id="q3b">
+<h2>3-2. ③ Agentic 이 어떻게 뒤집혔나</h2>
+
+<p>10/25 진단에 이렇게 적혀 있습니다.</p>
+<p class="quote">③ Agentic 경험 4/10 — 배점이 제일 큰데 제일 약합니다. 검사기는 있는데 그 결과를 다음 행동에 쓰지 않습니다.</p>
+
+<p><b>「스스로 찾아보기」</b>가 이걸 뒤집었습니다. 공고 조건을 못 채우면 AI 가 스스로 찾아 나섭니다.</p>
+
+<pre>✗ Java 또는 Kotlin 및 Spring 기반으로 API 를 설계·구현해 본 경험
+   찾아볼게요 — Spring·Java 학습 및 서버 관련 레포가 있습니다
+   카드로 안 만든 후보 63개를 읽었어요
+   GitHub 에서 'Spring' 로 내 커밋 0개를 찾았어요
+   GitHub 에서 'Kotlin' 로 내 커밋 1개를 찾았어요
+   GitHub 에서 'REST API' 로 내 커밋 1개를 찾았어요
+   쓸 만한 자료를 찾지 못했어요.</pre>
+
+<p><b>AI 가 조건마다 검색어 3개를 스스로 만들어 GitHub 을 뒤집니다.</b>
+못 찾으면 정직하게 못 찾았다고 하고, 찾으면 "후보로 카드 만들기" 로 이어 줍니다. 최대 5개 조건까지만(예산).</p>
+
+<h3>코드에 남은 신호</h3>
+<div class="tblw"><table>
+  <tr><th>무엇</th><th>우리 코드</th><th>24팀 중</th></tr>
+  <tr class="good"><td><b>예산·상한</b></td>
+      <td><code>max_repair_rounds 5</code> · <code>max-turns 8</code> · <code>opens_left</code> · 조건 5개 · 후보 63개</td>
+      <td><b>1위 (49개)</b></td></tr>
+  <tr><td><b>도구</b></td>
+      <td>후보 읽기 → 카드 근거 읽기 → <b>GitHub 커밋 검색</b>(<code>httpx</code> + <code>api.github.com</code>)</td>
+      <td>3위 (26개)</td></tr>
+  <tr><td><b>분기</b></td><td><code>OPEN</code>/<code>REWRITE</code>/<code>KEEP</code> · 찾기/<code>SKIPPED</code> · <code>next_action</code></td><td>19개</td></tr>
+  <tr><td><b>루프</b></td><td>고쳐쓰기 5회 · 되묻기 8회</td><td>14개</td></tr>
+  <tr class="mid"><td><b>그래프</b></td><td>없음 — LangGraph 를 안 씁니다</td><td>0개</td></tr>
+</table></div>
+
+<div class="note b"><p><b>LangGraph 를 안 쓰는 건 나쁜 게 아닙니다. 다만 겉으로 드러나지 않습니다.</b>
+코드를 훑으면 <code>StateGraph</code> 나 <code>tools=[...]</code> 가 눈에 띄는데,
+우리는 <code>httpx</code> 로 GitHub 을 직접 부르는 식이라 <b>찾아보지 않으면 안 보입니다.</b></p>
+<p class="kicker">→ 그래서 <b>테크스펙에 적는 것</b>이 코드를 고치는 것보다 효과가 큽니다. §6 의 4번.</p></div>
+</section>
+
+<section id="q3c">
+<h2>3-3. 열흘 동안 24팀은 — 10/25 → 11/4</h2>
+
+<h3>merged PR 증가량</h3>
+<div class="tblw"><table>
+  <tr><th>팀</th><th>서비스</th><th>10/25</th><th>11/4</th><th>증가</th></tr>
+  <tr><td>chungnam-2</td><td>여행 장소</td><td>358</td><td><b>719</b></td><td><b>+361</b></td></tr>
+  <tr><td>pusan-2</td><td>피치코치</td><td>270</td><td>542</td><td><b>+272</b></td></tr>
+  <tr class="good"><td><b>kyungpook-1</b></td><td><b>Gitory</b></td><td>221</td><td><b>432</b></td><td><b>+211</b></td></tr>
+  <tr><td>kangwon-2</td><td>쌤플</td><td>187</td><td>334</td><td>+147</td></tr>
+  <tr><td>chonnam-2</td><td>대신고</td><td>260</td><td>394</td><td>+134</td></tr>
+  <tr><td>chungnam-4</td><td>아이담</td><td>113</td><td>204</td><td>+91</td></tr>
+  <tr><td>kyungpook-2</td><td>잇다</td><td>142</td><td>229</td><td>+87</td></tr>
+  <tr><td>pusan-3</td><td>아이캐치</td><td>299</td><td>380</td><td>+81</td></tr>
+  <tr><td colspan="5" class="kicker">나머지 16팀은 +18 ~ +77</td></tr>
+</table></div>
+
+<p>열흘 동안 <b>증가량 3위</b>입니다.</p>
+
+<h3>배포 — 여기가 갈립니다</h3>
+<div class="tblw"><table>
+  <tr><th></th><th>10/25</th><th>11/4</th></tr>
+  <tr><td>공개 URL 이 살아 있는 팀</td><td>14팀</td><td class="good">확인한 12팀 <b>전부 200</b></td></tr>
+  <tr><td>10/25에 배포 없던 9팀</td><td>없음</td><td class="lo"><b>9팀 모두 README 에 여전히 URL 없음</b></td></tr>
+</table></div>
+
+<div class="note"><p><b>다만 우리만 IP 주소입니다.</b></p>
+<pre>pusan-3    icatch.ai.kr
+kangwon-3  palgijeone.com
+pusan-1    irya.cloud
+kyungpook-6 goodradar.mojan.kr
+kyungpook-2 iitda.duckdns.org
+...
+우리        3-37-14-211.sslip.io</pre>
+<p>제출물 1번에 적힐 주소입니다. <b>duckdns 는 무료</b>고 <code>.kr</code> 도메인은 1~2만 원이라 이틀 안에 됩니다.</p></div>
+</section>
+
 
 <section id="q4">
 <h2>4. 상위권 팀</h2>
